@@ -1,0 +1,13 @@
+target
+.settings
+.classpath
+.project
+.idea
+.directory
+nb-configuration.xml
+nbactions.xml
+*.iml
+*.log
+hs_err_pid*
+Thumbs.db
+.svn

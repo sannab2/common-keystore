@@ -1,0 +1,84 @@
+/**
+ * Copyright &copy; 2016 Dell Inc. or its subsidiaries. All Rights Reserved.
+ * VCE Confidential/Proprietary Information
+ */
+
+package com.dell.cpsd.rcm.fitness.keystore;
+
+import com.dell.cpsd.rcm.fitness.keystore.encryption.EncryptionUtility;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+
+/**
+ * This is the test class for EncryptionUtility class.
+ * <p>
+ * Copyright &copy; 2016 Dell Inc. or its subsidiaries. All Rights Reserved.
+ * <p/>
+ *
+ * @version 1.0
+ * @since SINCE-TBD
+ */
+public class EncryptionUtilityTest
+{
+    public static final String ENCRYPTION_ALGORITHM = "RSA";
+
+    @Test(expected = NoSuchAlgorithmException.class)
+    public void no_such_algorithm_exception() throws Exception
+    {
+        EncryptionUtility.obtainPublicKey("AES");
+    }
+
+    @Test(expected = InvalidKeySpecException.class)
+    public void invalid_key_specification_exception() throws Exception
+    {
+        PublicKey publicKey = EncryptionUtility.obtainPublicKey(ENCRYPTION_ALGORITHM);
+
+        String publicKeyString = EncryptionUtility.generatePublicKeyString(publicKey);
+
+        EncryptionUtility.derivePublicKeyFromString(publicKeyString, "DSA");
+    }
+
+    @Test
+    public void compare_PublicKey_With_DerivedPublicKey() throws Exception
+    {
+        PublicKey publicKey = EncryptionUtility.obtainPublicKey(ENCRYPTION_ALGORITHM);
+
+        String publicKeyString = EncryptionUtility.generatePublicKeyString(publicKey);
+
+        PublicKey derivedPublicKey = EncryptionUtility.derivePublicKeyFromString(publicKeyString, ENCRYPTION_ALGORITHM);
+
+        Assert.assertEquals(derivedPublicKey, publicKey);
+    }
+
+    @Test
+    public void compare_CipherText_With_PlainText_NotSame() throws Exception
+    {
+        PublicKey publicKey = EncryptionUtility.obtainPublicKey(ENCRYPTION_ALGORITHM);
+
+        String plainText = "unencryptedPassword";
+
+        String cipherText = new String(EncryptionUtility.cipherText(publicKey, plainText, ENCRYPTION_ALGORITHM));
+
+        Assert.assertNotEquals(plainText, cipherText);
+        Assert.assertNotSame(cipherText, plainText);
+    }
+
+    @Test
+    public void compare_CipherText_With_DecipherText_Same() throws Exception
+    {
+        KeyPair keyPair = EncryptionUtility.obtainKeyPair(ENCRYPTION_ALGORITHM);
+
+        String plainText = "unencryptedPassword";
+
+        byte[] cipherText = EncryptionUtility.cipherText(keyPair.getPublic(), plainText, ENCRYPTION_ALGORITHM);
+
+        String decipherText = EncryptionUtility.decipherText(keyPair.getPrivate(), cipherText, ENCRYPTION_ALGORITHM);
+
+        Assert.assertEquals(decipherText, plainText);
+    }
+}
