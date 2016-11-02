@@ -12,6 +12,12 @@
         stores for storing certificate chains or keys.
     </description>
 
+    <parent>
+        <groupId>com.dell.cpsd</groupId>
+        <artifactId>root-parent</artifactId>
+        <version>0.1</version>
+    </parent>
+
     <packaging>jar</packaging>
 
     <properties>
