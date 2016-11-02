@@ -39,6 +39,8 @@ import java.util.Base64;
  */
 public class EncryptionUtility
 {
+    public static final String ENCODING_TYPE       = "dell.cpsd.keystore.encryption.encoding";
+    public static final String ENCRYPTION_KEY_ZISE = "dell.cpsd.keystore.encryption.keysize";
     /**
      * Default Constructor - Scope is Private
      */
@@ -47,9 +49,6 @@ public class EncryptionUtility
         // Default Private Constructor
         // Added just to hide the class instantiation
     }
-
-    public static final String ENCODING_TYPE            = "dell.cpsd.keystore.encryption.encoding";
-    public static final String ENCRYPTION_KEY_ZISE      = "dell.cpsd.keystore.encryption.keysize";
 
     /**
      * <p>

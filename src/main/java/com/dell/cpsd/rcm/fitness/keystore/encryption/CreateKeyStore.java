@@ -19,6 +19,21 @@ import java.util.Properties;
 public class CreateKeyStore
 {
     public static final String CERTIFICATE_VALIDITY = "dell.cpsd.keystore.certificate.validity";
+
+    //TODO COMPLETE CREATING THE CERTIFICATE, AND ADD JAVA DOCS
+    public static X509Certificate createCertificate(final String alias, final KeyPair keyPair) throws IOException
+    {
+        //PrivateKey privateKey = keyPair.getPrivate();
+        X509CertInfo certificateInfo = new X509CertInfo();
+
+        LocalDateTime fromDate = LocalDateTime.now();
+        LocalDateTime toDate = LocalDateTime.now()
+                .plusYears(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_VALIDITY)));
+
+        //CertificateValidity certificateValidity = new CertificateValidity(fr)
+        return null;
+    }
+
     //TODO COMPLETE CREATING THE KEYSTORE, AND ADD JAVA DOCS
     public KeyStore createServiceKeyStore(final String serviceName)
     {
@@ -36,19 +51,6 @@ public class CreateKeyStore
 
         }
 
-        return null;
-    }
-
-    //TODO COMPLETE CREATING THE CERTIFICATE, AND ADD JAVA DOCS
-    public static X509Certificate createCertificate(final String alias, final KeyPair keyPair) throws IOException
-    {
-        //PrivateKey privateKey = keyPair.getPrivate();
-        X509CertInfo certificateInfo = new X509CertInfo();
-
-        LocalDateTime fromDate = LocalDateTime.now();
-        LocalDateTime toDate = LocalDateTime.now().plusYears(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_VALIDITY)));
-
-        //CertificateValidity certificateValidity = new CertificateValidity(fr)
         return null;
     }
 

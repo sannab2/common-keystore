@@ -35,9 +35,8 @@ public class EncryptionPropertiesConfig
     public static Properties loadProperties() throws IOException
     {
         Properties properties = new Properties();
-        InputStream in = EncryptionPropertiesConfig.class.getClassLoader().getResourceAsStream("META-INF/encryption.properties");
+        InputStream in = EncryptionPropertiesConfig.class.getClassLoader().getResourceAsStream("encryption.properties");
         properties.load(in);
-        in.close();
         return properties;
     }
 }

@@ -5,6 +5,7 @@
 
 package com.dell.cpsd.rcm.fitness.keystore;
 
+import com.dell.cpsd.rcm.fitness.keystore.config.EncryptionPropertiesConfig;
 import com.dell.cpsd.rcm.fitness.keystore.encryption.EncryptionUtility;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,6 +27,16 @@ import java.security.spec.InvalidKeySpecException;
 public class EncryptionUtilityTest
 {
     public static final String ENCRYPTION_ALGORITHM = "RSA";
+    public static final int    ENCRYPTION_KEY_SIZE  = 2048;
+    public static final String KEYSTORE_TYPE        = "PKCS12";
+    public static final String ENCODING_TYPE        = "UTF-8";
+    public static final int    CERTIFICATE_VALIDITY = 1;
+
+    public static final String ENCRYPTION_KEY_SIZE_PROPERTY  = "dell.cpsd.keystore.encryption.keysize";
+    public static final String ENCRYPTION_ALGORITHM_PROPERTY = "dell.cpsd.keystore.encryption.algorithm";
+    public static final String KEYSTORE_TYPE_PROPERTY        = "dell.cpsd.keystore.type";
+    public static final String ENCRYPTION_ENCODING_PROPERTY  = "dell.cpsd.keystore.encryption.encoding";
+    public static final String CERTIFICATE_VALIDITY_PROPERTY = "dell.cpsd.keystore.certificate.validity";
 
     @Test(expected = NoSuchAlgorithmException.class)
     public void no_such_algorithm_exception() throws Exception
@@ -41,6 +52,38 @@ public class EncryptionUtilityTest
         String publicKeyString = EncryptionUtility.generatePublicKeyString(publicKey);
 
         EncryptionUtility.derivePublicKeyFromString(publicKeyString, "DSA");
+    }
+
+    @Test
+    public void test_Property_EncryptionAlgorithm() throws Exception
+    {
+        Assert.assertEquals(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_ALGORITHM_PROPERTY), ENCRYPTION_ALGORITHM);
+    }
+
+    @Test
+    public void test_Property_KeySize() throws Exception
+    {
+        Assert.assertEquals(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_KEY_SIZE_PROPERTY)),
+                ENCRYPTION_KEY_SIZE);
+    }
+
+    @Test
+    public void test_Property_KeyStore_Type() throws Exception
+    {
+        Assert.assertEquals(EncryptionPropertiesConfig.loadProperties().getProperty(KEYSTORE_TYPE_PROPERTY), KEYSTORE_TYPE);
+    }
+
+    @Test
+    public void test_Property_Encoding_Type() throws Exception
+    {
+        Assert.assertEquals(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_ENCODING_PROPERTY), ENCODING_TYPE);
+    }
+
+    @Test
+    public void test_Property_Certificate_Validity() throws Exception
+    {
+        Assert.assertEquals(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_VALIDITY_PROPERTY)),
+                CERTIFICATE_VALIDITY);
     }
 
     @Test
