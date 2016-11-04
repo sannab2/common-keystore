@@ -20,6 +20,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -39,8 +40,10 @@ import java.util.Base64;
  */
 public class EncryptionUtility
 {
-    public static final String ENCODING_TYPE       = "dell.cpsd.keystore.encryption.encoding";
-    public static final String ENCRYPTION_KEY_ZISE = "dell.cpsd.keystore.encryption.keysize";
+    private static final String ENCRYPTION_KEY_SIZE_PROPERTY = "dell.cpsd.keystore.encryption.keysize";
+    //private static final String ENCRYPTION_ALGORITHM_PROPERTY = "dell.cpsd.keystore.encryption.algorithm";
+    private static final String ENCRYPTION_ENCODING_PROPERTY = "dell.cpsd.keystore.encryption.encoding";
+
     /**
      * Default Constructor - Scope is Private
      */
@@ -67,7 +70,9 @@ public class EncryptionUtility
     public static KeyPairGenerator obtainKeyPairGenerator(final String algorithm) throws NoSuchAlgorithmException, IOException
     {
         final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
-        keyPairGenerator.initialize(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_KEY_ZISE)));
+        keyPairGenerator.initialize(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_KEY_SIZE_PROPERTY)),
+                SecureRandom.getInstance("SHA1PRNG"));
+        //TODO SECURE RANDOM CONSTANT
         return keyPairGenerator;
     }
 
@@ -199,7 +204,7 @@ public class EncryptionUtility
     {
         final Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        return cipher.doFinal(text.getBytes(EncryptionPropertiesConfig.loadProperties().getProperty(ENCODING_TYPE)));
+        return cipher.doFinal(text.getBytes(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_ENCODING_PROPERTY)));
     }
 
     /**
@@ -225,6 +230,7 @@ public class EncryptionUtility
     {
         final Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        return new String(cipher.doFinal(cipherText), EncryptionPropertiesConfig.loadProperties().getProperty(ENCODING_TYPE));
+        return new String(cipher.doFinal(cipherText),
+                EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_ENCODING_PROPERTY));
     }
 }

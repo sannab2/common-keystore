@@ -20,8 +20,6 @@ import java.util.Properties;
  */
 public class EncryptionPropertiesConfig
 {
-    public static final String PROPERTY_KEYSTORE_TYPE = "dell.cpsd.keystore.type";
-
     /**
      * Default Constructor - Scope is Private
      */
