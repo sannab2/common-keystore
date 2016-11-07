@@ -38,7 +38,7 @@ import java.util.Base64;
  * @version 1.0
  * @since SINCE -TBD
  */
-public class EncryptionUtility
+public final class EncryptionUtility
 {
     private static final String ENCRYPTION_KEY_SIZE_PROPERTY = "dell.cpsd.keystore.encryption.keysize";
     //private static final String ENCRYPTION_ALGORITHM_PROPERTY = "dell.cpsd.keystore.encryption.algorithm";

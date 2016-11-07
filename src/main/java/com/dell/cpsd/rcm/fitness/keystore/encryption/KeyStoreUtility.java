@@ -8,8 +8,7 @@ package com.dell.cpsd.rcm.fitness.keystore.encryption;
 import com.dell.cpsd.rcm.fitness.keystore.config.EncryptionPropertiesConfig;
 import sun.security.x509.AlgorithmId;
 import sun.security.x509.CertificateAlgorithmId;
-import sun.security.x509.CertificateIssuerName;
-import sun.security.x509.CertificateSubjectName;
+import sun.security.x509.CertificateSerialNumber;
 import sun.security.x509.CertificateValidity;
 import sun.security.x509.CertificateVersion;
 import sun.security.x509.CertificateX509Key;
@@ -41,9 +40,6 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Properties;
-
-import static com.dell.cpsd.rcm.fitness.keystore.config.EncryptionPropertiesConfig.loadProperties;
 
 /**
  * This class provides various key store utility methods that can be
@@ -59,13 +55,14 @@ import static com.dell.cpsd.rcm.fitness.keystore.config.EncryptionPropertiesConf
  * @version 1.0
  * @since SINCE -TBD
  */
-public class KeyStoreUtility
+public final class KeyStoreUtility
 {
     private static final String KEYSTORE_TYPE_PROPERTY                 = "dell.cpsd.keystore.type";
     private static final String KEYSTORE_OUTPUT_TYPE_PROPERTY          = "dell.cpsd.keystore.certificate.output.type";
     private static final String CERTIFICATE_VALIDITY_PROPERTY          = "dell.cpsd.keystore.certificate.validity";
     private static final String CERTIFICATE_SNO_BIT_SIZE_PROPERTY      = "dell.cpsd.keystore.certificate.sn.bits.size";
     private static final String CERTIFICATE_SIGNING_ALGORITHM_PROPERTY = "dell.cpsd.keystore.certificate.signing.algorithm";
+    private static final String ENCRYPTION_ALGORITHM_PROPERTY          = "dell.cpsd.keystore.encryption.algorithm";
 
     private KeyStoreUtility()
     {
@@ -84,16 +81,21 @@ public class KeyStoreUtility
      * @param serviceName      the service name
      * @param keyStorePath     the key store path
      * @param keyStorePassword the key store password
-     * @param keyStoreName     the key store name
+     * @param keyAlias         the key alias
      * @return the key store
-     * @throws IOException              In case properties are not loaded correctly or
-     *                                  key store is not initialized
-     * @throws KeyStoreException        the key store exception
-     * @throws NoSuchAlgorithmException the no such algorithm exception
-     * @throws CertificateException     the certificate exception
+     * @throws SignatureException       Thrown when the program is unable
+     *                                  to sign the certificate
+     * @throws NoSuchProviderException  NoSuchProviderException
+     * @throws InvalidKeyException      InvalidKeyException
+     * @throws KeyStoreException        KeyStoreException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws CertificateException     CertificateException
+     * @throws IOException              IOException
      */
     public static KeyStore createServiceKeyStore(final String serviceName, final String keyStorePath, final char[] keyStorePassword,
-            final String keyStoreName) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException
+            final String keyAlias, final char[] keyPassword)
+            throws SignatureException, NoSuchProviderException, InvalidKeyException, KeyStoreException, NoSuchAlgorithmException,
+            CertificateException, IOException
     {
         try
         {
@@ -102,37 +104,72 @@ public class KeyStoreUtility
             //The input stream and password is null for creating the key store first time
             keyStore.load(null, null);
 
+            final String keyStoreId = keyStorePath + "--" + serviceName + EncryptionPropertiesConfig.loadProperties()
+                    .getProperty(KEYSTORE_OUTPUT_TYPE_PROPERTY);
+
+            updateKeyStore(keyPassword, keyAlias, keyStore);
+
             //Appends the key store path, service name, and key store name
-            keyStore.store(new FileOutputStream(
-                    keyStorePath + "-" + serviceName + keyStoreName + EncryptionPropertiesConfig.loadProperties()
-                            .getProperty(KEYSTORE_OUTPUT_TYPE_PROPERTY)), keyStorePassword);
+            keyStore.store(new FileOutputStream(keyStoreId), keyStorePassword);
 
             return keyStore;
         }
         catch (KeyStoreException exception)
         {
-            throw new KeyStoreException(exception.getMessage());
+            throw new KeyStoreException(exception);
         }
         catch (NoSuchAlgorithmException exception)
         {
-            throw new NoSuchAlgorithmException(exception.getMessage());
+            throw new NoSuchAlgorithmException(exception);
         }
         catch (CertificateException exception)
         {
-            throw new CertificateException(exception.getMessage());
-        }
-        catch (FileNotFoundException exception)
-        {
-            throw new FileNotFoundException(exception.getMessage());
+            throw new CertificateException(exception);
         }
         catch (IOException exception)
         {
-            throw new IOException(exception.getMessage());
+            throw new IOException(exception);
         }
     }
 
-    //TODO COMPLETE CREATING THE CERTIFICATE, AND ADD JAVA DOCS
-    public static X509Certificate createCertificate(final String alias, final KeyPair keyPair)
+    /**
+     * TODO JAVA DOCS
+     *
+     * @param keyPassword
+     * @param keyAlias
+     * @param keyStore
+     * @throws NoSuchAlgorithmException
+     * @throws IOException
+     * @throws CertificateException
+     * @throws SignatureException
+     * @throws NoSuchProviderException
+     * @throws InvalidKeyException
+     * @throws KeyStoreException
+     */
+    private static void updateKeyStore(final char[] keyPassword, final String keyAlias, final KeyStore keyStore)
+            throws NoSuchAlgorithmException, IOException, CertificateException, SignatureException, NoSuchProviderException,
+            InvalidKeyException, KeyStoreException
+    {
+        final KeyPair keyPair = EncryptionUtility
+                .obtainKeyPair(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_ALGORITHM_PROPERTY));
+        final X509Certificate x509Certificate = createCertificate(keyAlias, keyPair);
+        keyStore.setKeyEntry(keyAlias, keyPair.getPrivate(), keyPassword, new X509Certificate[] {x509Certificate});
+    }
+
+    /**
+     * TODO JAVA DOCS
+     *
+     * @param alias
+     * @param keyPair
+     * @return
+     * @throws IOException
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws SignatureException
+     * @throws NoSuchProviderException
+     * @throws InvalidKeyException
+     */
+    private static X509Certificate createCertificate(final String alias, final KeyPair keyPair)
             throws IOException, CertificateException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException,
             InvalidKeyException
     {
@@ -148,28 +185,70 @@ public class KeyStoreUtility
         BigInteger serialNumber = new BigInteger(
                 Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_SNO_BIT_SIZE_PROPERTY)),
                 new SecureRandom());
-        X500Name issuerName = new X500Name(alias);
-        X500Name subject = new X500Name(" Certificate for Service - " + alias);
+        X500Name issuerName = new X500Name("C=" + alias);
+        X500Name subject = new X500Name("C=" + alias);
 
         certificateInfo.set(X509CertInfo.VALIDITY, certificateValidity);
-        certificateInfo.set(X509CertInfo.SERIAL_NUMBER, serialNumber);
-        certificateInfo.set(X509CertInfo.SUBJECT, new CertificateSubjectName(subject));
-        certificateInfo.set(X509CertInfo.ISSUER, new CertificateIssuerName(issuerName));
+        certificateInfo.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber(serialNumber));
+        certificateInfo.set(X509CertInfo.SUBJECT, subject);
+        certificateInfo.set(X509CertInfo.ISSUER, issuerName);
         certificateInfo.set(X509CertInfo.KEY, new CertificateX509Key(keyPair.getPublic()));
         certificateInfo.set(X509CertInfo.VERSION, new CertificateVersion(CertificateVersion.V3));
         AlgorithmId algorithm = new AlgorithmId(AlgorithmId.md5WithRSAEncryption_oid);
         certificateInfo.set(X509CertInfo.ALGORITHM_ID, new CertificateAlgorithmId(algorithm));
-
-        // Sign the certificate
-        X509CertImpl x509Cert = new X509CertImpl(certificateInfo);
-        x509Cert.sign(privateKey, EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_SIGNING_ALGORITHM_PROPERTY));
+        X509CertImpl x509Cert = signCertificate(privateKey, certificateInfo);
 
         return x509Cert;
     }
 
+    /**
+     * TODO JAVA DOCS
+     *
+     * @param privateKey
+     * @param certificateInfo
+     * @return
+     * @throws CertificateException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidKeyException
+     * @throws NoSuchProviderException
+     * @throws SignatureException
+     * @throws IOException
+     */
+    private static X509CertImpl signCertificate(final PrivateKey privateKey, final X509CertInfo certificateInfo)
+            throws CertificateException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, SignatureException,
+            IOException
+    {
+        // Sign the certificate
+        X509CertImpl x509Cert = new X509CertImpl(certificateInfo);
+        x509Cert.sign(privateKey, EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_SIGNING_ALGORITHM_PROPERTY));
+        return x509Cert;
+    }
+
     //TODO Complete the functionality
-    public static KeyPair getKeyPair(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
-            final String keyStoreAlias)
+    private static KeyStore loadKeyStore(final String pathToKeyStore, final char[] keyStorePassword) throws FileNotFoundException
+    {
+        try (InputStream fileInputStream = new FileInputStream(pathToKeyStore))
+        {
+            KeyStore keyStore = KeyStore.getInstance(EncryptionPropertiesConfig.loadProperties().getProperty(KEYSTORE_TYPE_PROPERTY));
+            keyStore.load(fileInputStream, keyStorePassword);
+
+            return keyStore;
+        }
+        catch (FileNotFoundException exception)
+        {
+            throw new FileNotFoundException(exception.getMessage());
+        }
+        catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException exception)
+        {
+            //TODO Handle or throw the exception properly
+        }
+
+        return null;
+    }
+
+    //TODO Complete the functionality
+    public static KeyPair getKeyPairFromKeyStore(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
+            final String keyStoreAlias) throws FileNotFoundException
     {
         try
         {
@@ -197,7 +276,7 @@ public class KeyStoreUtility
 
     //TODO Complete the functionality
     public static PublicKey getPublicKey(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
-            final String keyStoreAlias)
+            final String keyStoreAlias) throws FileNotFoundException
     {
         try
         {
@@ -223,28 +302,6 @@ public class KeyStoreUtility
         return null;
     }
 
-    //TODO Complete the functionality
-    private static KeyStore loadKeyStore(final String pathToKeyStore, final char[] keyStorePassword)
-    {
-        try (InputStream fileInputStream = new FileInputStream(pathToKeyStore))
-        {
-            Properties properties = loadProperties();
-            KeyStore keyStore = KeyStore.getInstance(properties.getProperty(KEYSTORE_TYPE_PROPERTY));
-            keyStore.load(fileInputStream, keyStorePassword);
-
-            //Key key = keyStore.getKey(keyStoreAlias, keyPassword);
-
-            return keyStore;
-        }
-        catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException exception)
-        {
-            //TODO Handle or throw the exception properly
-            // Don't handle the exceptions
-        }
-
-        return null;
-    }
-
     //TODO GENERATE THE KEY FROM KEYSTORE
     private static Key generateKeyFromKeyStore(final KeyStore keyStore, final String keyStoreAlias, final char[] keyPassword)
     {
@@ -259,4 +316,5 @@ public class KeyStoreUtility
         }
         return null;
     }
+
 }
