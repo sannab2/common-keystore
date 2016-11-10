@@ -16,6 +16,7 @@ import sun.security.x509.X500Name;
 import sun.security.x509.X509CertImpl;
 import sun.security.x509.X509CertInfo;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -64,9 +65,9 @@ public final class KeyStoreUtility
     private static final String CERTIFICATE_SIGNING_ALGORITHM_PROPERTY = "dell.cpsd.keystore.certificate.signing.algorithm";
     private static final String ENCRYPTION_ALGORITHM_PROPERTY          = "dell.cpsd.keystore.encryption.algorithm";
 
-    private KeyStoreUtility()
+    public KeyStoreUtility()
     {
-        //Private Constructor to disable instantiation outside the class
+        // Default Constructor
     }
 
     /**
@@ -78,21 +79,21 @@ public final class KeyStoreUtility
      * essential that any service creating the key store must store
      * the password securely as it is required to access the key store.
      *
-     * @param serviceName      the service name
-     * @param keyStorePath     the key store path
-     * @param keyStorePassword the key store password
-     * @param keyAlias         the key alias
-     * @return the key store
-     * @throws SignatureException       Thrown when the program is unable
-     *                                  to sign the certificate
-     * @throws NoSuchProviderException  NoSuchProviderException
-     * @throws InvalidKeyException      InvalidKeyException
-     * @throws KeyStoreException        KeyStoreException
-     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
-     * @throws CertificateException     CertificateException
-     * @throws IOException              IOException
+     * @param serviceName Requesting Service Name
+     * @param keyStorePath Path to the Key store (/opt/dell/rcm-fitness/services/<service-name>/conf/keystore/
+     * @param keyStorePassword Password to unlock the key store
+     * @param keyAlias Alias used while storing the key, key is again retrieved using this alias
+     * @param keyPassword Password used to retrieve the key
+     * @return
+     * @throws SignatureException
+     * @throws NoSuchProviderException
+     * @throws InvalidKeyException
+     * @throws KeyStoreException
+     * @throws NoSuchAlgorithmException
+     * @throws CertificateException
+     * @throws IOException
      */
-    public static KeyStore createServiceKeyStore(final String serviceName, final String keyStorePath, final char[] keyStorePassword,
+    public KeyStore createServiceKeyStore(final String serviceName, final String keyStorePath, final char[] keyStorePassword,
             final String keyAlias, final char[] keyPassword)
             throws SignatureException, NoSuchProviderException, InvalidKeyException, KeyStoreException, NoSuchAlgorithmException,
             CertificateException, IOException
@@ -104,7 +105,7 @@ public final class KeyStoreUtility
             //The input stream and password is null for creating the key store first time
             keyStore.load(null, null);
 
-            final String keyStoreId = keyStorePath + "--" + serviceName + EncryptionPropertiesConfig.loadProperties()
+            final String keyStoreId = keyStorePath + "" + serviceName + EncryptionPropertiesConfig.loadProperties()
                     .getProperty(KEYSTORE_OUTPUT_TYPE_PROPERTY);
 
             updateKeyStore(keyPassword, keyAlias, keyStore);
@@ -146,7 +147,7 @@ public final class KeyStoreUtility
      * @throws InvalidKeyException
      * @throws KeyStoreException
      */
-    private static void updateKeyStore(final char[] keyPassword, final String keyAlias, final KeyStore keyStore)
+    private void updateKeyStore(final char[] keyPassword, final String keyAlias, final KeyStore keyStore)
             throws NoSuchAlgorithmException, IOException, CertificateException, SignatureException, NoSuchProviderException,
             InvalidKeyException, KeyStoreException
     {
@@ -169,7 +170,7 @@ public final class KeyStoreUtility
      * @throws NoSuchProviderException
      * @throws InvalidKeyException
      */
-    private static X509Certificate createCertificate(final String alias, final KeyPair keyPair)
+    private X509Certificate createCertificate(final String alias, final KeyPair keyPair)
             throws IOException, CertificateException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException,
             InvalidKeyException
     {
@@ -214,7 +215,7 @@ public final class KeyStoreUtility
      * @throws SignatureException
      * @throws IOException
      */
-    private static X509CertImpl signCertificate(final PrivateKey privateKey, final X509CertInfo certificateInfo)
+    private X509CertImpl signCertificate(final PrivateKey privateKey, final X509CertInfo certificateInfo)
             throws CertificateException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, SignatureException,
             IOException
     {
@@ -225,7 +226,7 @@ public final class KeyStoreUtility
     }
 
     //TODO Complete the functionality
-    private static KeyStore loadKeyStore(final String pathToKeyStore, final char[] keyStorePassword) throws FileNotFoundException
+    private KeyStore loadKeyStore(final String pathToKeyStore, final char[] keyStorePassword) throws FileNotFoundException
     {
         try (InputStream fileInputStream = new FileInputStream(pathToKeyStore))
         {
@@ -247,7 +248,7 @@ public final class KeyStoreUtility
     }
 
     //TODO Complete the functionality
-    public static KeyPair getKeyPairFromKeyStore(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
+    public KeyPair getKeyPairFromKeyStore(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
             final String keyStoreAlias) throws FileNotFoundException
     {
         try
@@ -275,7 +276,7 @@ public final class KeyStoreUtility
     }
 
     //TODO Complete the functionality
-    public static PublicKey getPublicKey(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
+    public PublicKey getPublicKey(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
             final String keyStoreAlias) throws FileNotFoundException
     {
         try
@@ -303,7 +304,7 @@ public final class KeyStoreUtility
     }
 
     //TODO GENERATE THE KEY FROM KEYSTORE
-    private static Key generateKeyFromKeyStore(final KeyStore keyStore, final String keyStoreAlias, final char[] keyPassword)
+    private Key generateKeyFromKeyStore(final KeyStore keyStore, final String keyStoreAlias, final char[] keyPassword)
     {
         try
         {
@@ -315,6 +316,25 @@ public final class KeyStoreUtility
             // Don't handle the exceptions
         }
         return null;
+    }
+
+    /**
+     * This method must be called by the service before instantiating
+     * the key store, if it returns true, the key store must not be
+     * created again, and mut be loaded. In case the key store doesn't
+     * exist, the application must create a new key store.
+     *
+     * @param pathToKeyStore The path to key store including the file name
+     * @return True/False, if true - key store exists
+     */
+    public boolean isKeyStoreExists(final String pathToKeyStore)
+    {
+        File keyStoreFile = new File(pathToKeyStore);
+        if (keyStoreFile.exists())
+        {
+            return true;
+        }
+        return false;
     }
 
 }
