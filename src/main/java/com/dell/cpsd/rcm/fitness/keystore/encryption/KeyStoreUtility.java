@@ -42,6 +42,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import static com.dell.cpsd.rcm.fitness.keystore.i18n.RcmKeyStoreExceptionCode.ERROR1_E;
+
 /**
  * This class provides various key store utility methods that can be
  * used across various projects. It is essential that all the services
@@ -79,19 +81,19 @@ public final class KeyStoreUtility
      * essential that any service creating the key store must store
      * the password securely as it is required to access the key store.
      *
-     * @param serviceName Requesting Service Name
-     * @param keyStorePath Path to the Key store (/opt/dell/rcm-fitness/services/<service-name>/conf/keystore/
+     * @param serviceName      Requesting Service Name
+     * @param keyStorePath     Path to the Key store (/opt/dell/rcm-fitness/services/<service-name>/conf/keystore/
      * @param keyStorePassword Password to unlock the key store
-     * @param keyAlias Alias used while storing the key, key is again retrieved using this alias
-     * @param keyPassword Password used to retrieve the key
+     * @param keyAlias         Alias used while storing the key, key is again retrieved using this alias
+     * @param keyPassword      Password used to retrieve the key
      * @return
-     * @throws SignatureException
-     * @throws NoSuchProviderException
-     * @throws InvalidKeyException
-     * @throws KeyStoreException
-     * @throws NoSuchAlgorithmException
-     * @throws CertificateException
-     * @throws IOException
+     * @throws SignatureException       SignatureException
+     * @throws NoSuchProviderException  NoSuchProviderException
+     * @throws InvalidKeyException      InvalidKeyException
+     * @throws KeyStoreException        KeyStoreException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws CertificateException     CertificateException
+     * @throws IOException              IOException
      */
     public KeyStore createServiceKeyStore(final String serviceName, final String keyStorePath, final char[] keyStorePassword,
             final String keyAlias, final char[] keyPassword)
@@ -117,19 +119,19 @@ public final class KeyStoreUtility
         }
         catch (KeyStoreException exception)
         {
-            throw new KeyStoreException(exception);
+            throw new KeyStoreException(ERROR1_E.getMessage(serviceName, keyStorePath, keyAlias), exception);
         }
         catch (NoSuchAlgorithmException exception)
         {
-            throw new NoSuchAlgorithmException(exception);
+            throw new NoSuchAlgorithmException(ERROR1_E.getMessage(serviceName, keyStorePath, keyAlias), exception);
         }
         catch (CertificateException exception)
         {
-            throw new CertificateException(exception);
+            throw new CertificateException(ERROR1_E.getMessage(serviceName, keyStorePath, keyAlias), exception);
         }
         catch (IOException exception)
         {
-            throw new IOException(exception);
+            throw new IOException(ERROR1_E.getMessage(serviceName, keyStorePath, keyAlias), exception);
         }
     }
 
@@ -249,17 +251,17 @@ public final class KeyStoreUtility
 
     //TODO Complete the functionality
     public KeyPair getKeyPairFromKeyStore(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
-            final String keyStoreAlias) throws FileNotFoundException
+            final String keyAlias) throws FileNotFoundException
     {
         try
         {
             KeyStore keyStore = loadKeyStore(pathToKeyStore, keyStorePassword);
 
-            Key key = generateKeyFromKeyStore(keyStore, keyStoreAlias, keyPassword);
+            Key key = generateKeyFromKeyStore(keyStore, keyAlias, keyPassword);
 
             if (key instanceof PrivateKey)
             {
-                Certificate certificate = keyStore.getCertificate(keyStoreAlias);
+                Certificate certificate = keyStore.getCertificate(keyAlias);
 
                 PublicKey publicKey = certificate.getPublicKey();
 
@@ -304,11 +306,11 @@ public final class KeyStoreUtility
     }
 
     //TODO GENERATE THE KEY FROM KEYSTORE
-    private Key generateKeyFromKeyStore(final KeyStore keyStore, final String keyStoreAlias, final char[] keyPassword)
+    private Key generateKeyFromKeyStore(final KeyStore keyStore, final String keyAlias, final char[] keyPassword)
     {
         try
         {
-            return keyStore.getKey(keyStoreAlias, keyPassword);
+            return keyStore.getKey(keyAlias, keyPassword);
         }
         catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException exception)
         {
