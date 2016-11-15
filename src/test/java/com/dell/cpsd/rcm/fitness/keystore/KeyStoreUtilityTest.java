@@ -5,10 +5,11 @@
 
 package com.dell.cpsd.rcm.fitness.keystore;
 
+import com.dell.cpsd.rcm.fitness.keystore.encryption.KeyStoreUtility;
 import org.junit.Test;
 
 /**
- * TODO: Document usage.
+ * This is the unit test class for {@link KeyStoreUtility}
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
  * VCE Confidential/Proprietary Information

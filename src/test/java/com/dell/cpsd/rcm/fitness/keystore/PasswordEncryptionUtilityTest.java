@@ -11,10 +11,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
 /**
- * TODO: Document usage.
- * <p>
+ * This is the unit test class for {@link PasswordEncryptionUtility}.
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
  * VCE Confidential/Proprietary Information
@@ -35,11 +33,15 @@ public class PasswordEncryptionUtilityTest
     @Test
     public void encrypted_password_not_null() throws Exception
     {
-        final String encryptedPassword_1 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
-        final String encryptedPassword_2 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
+        final String encryptedPassword_1 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
+        final String encryptedPassword_2 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
 
-        final String encryptedPassword_3 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
-        final String encryptedPassword_4 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
+        final String encryptedPassword_3 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
+        final String encryptedPassword_4 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
 
         Assert.assertNotNull(encryptedPassword_1);
         Assert.assertNotNull(encryptedPassword_2);
@@ -50,7 +52,8 @@ public class PasswordEncryptionUtilityTest
     @Test(expected = EncryptionOperationNotPossibleException.class)
     public void encrypted_decrypted_passwords_using_different_password_throws_exception() throws Exception
     {
-        final String encryptedPassword_1 = passwordEncryptionUtility.encryptPassword("symphony-hal1".toCharArray(), "hal-orchestrator-keystore");
+        final String encryptedPassword_1 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal1".toCharArray(), "hal-orchestrator-keystore");
 
         passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_1);
     }
@@ -70,11 +73,15 @@ public class PasswordEncryptionUtilityTest
     @Test
     public void encrypted_passwords_not_same_new_every_time() throws Exception
     {
-        final String encryptedPassword_1 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
-        final String encryptedPassword_2 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
+        final String encryptedPassword_1 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
+        final String encryptedPassword_2 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
 
-        final String encryptedPassword_3 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
-        final String encryptedPassword_4 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
+        final String encryptedPassword_3 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
+        final String encryptedPassword_4 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
 
         Assert.assertNotEquals(encryptedPassword_1, encryptedPassword_2);
         Assert.assertNotEquals(encryptedPassword_3, encryptedPassword_4);
@@ -128,11 +135,15 @@ public class PasswordEncryptionUtilityTest
     @Test
     public void decrypted_passwords_from_encrypted_passwords_same() throws Exception
     {
-        final String encryptedPassword_1 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
-        final String encryptedPassword_2 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
+        final String encryptedPassword_1 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
+        final String encryptedPassword_2 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
 
-        final String encryptedPassword_3 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
-        final String encryptedPassword_4 = passwordEncryptionUtility.encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
+        final String encryptedPassword_3 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
+        final String encryptedPassword_4 = passwordEncryptionUtility
+                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
 
         final char[] decryptedPassword_1 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_1);
         final char[] decryptedPassword_2 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_2);

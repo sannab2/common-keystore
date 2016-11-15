@@ -22,23 +22,29 @@ import org.junit.Test;
  */
 public class EncryptionPropertiesTest
 {
-    public static final String ENCRYPTION_ALGORITHM          = "RSA";
-    public static final int    ENCRYPTION_KEY_SIZE           = 2048;
-    public static final String KEYSTORE_TYPE                 = "PKCS12";
-    public static final String ENCODING_TYPE                 = "UTF-8";
-    public static final int    CERTIFICATE_VALIDITY          = 1;
-    public static final int    CERTIFICATE_SNO_BIT_SIZE      = 128;
-    public static final String CERTIFICATE_SIGNING_ALGORITHM = "MD5WithRSA";
-    public static final String KEYSTORE_OUTPUT_TYPE          = ".p12";
+    public static final  String ENCRYPTION_ALGORITHM          = "RSA";
+    private static final int    ENCRYPTION_KEY_SIZE           = 2048;
+    private static final String KEYSTORE_TYPE                 = "PKCS12";
+    private static final String ENCODING_TYPE                 = "UTF-8";
+    private static final int    CERTIFICATE_VALIDITY          = 1;
+    private static final int    CERTIFICATE_SNO_BIT_SIZE      = 128;
+    private static final String CERTIFICATE_SIGNING_ALGORITHM = "MD5WithRSA";
+    private static final String KEYSTORE_OUTPUT_TYPE          = ".p12";
+    private static final String HASHING_ITERATIONS_COUNT      = "1000";
+    private static final String PBE_ENCRYPTION_ALGORITHM      = "PBEWITHMD5ANDDES";
+    private static final int    SALT_GENERATOR_BYTE_LENGTH    = 32;
 
-    public static final String ENCRYPTION_KEY_SIZE_PROPERTY           = "dell.cpsd.keystore.encryption.keysize";
-    public static final String ENCRYPTION_ALGORITHM_PROPERTY          = "dell.cpsd.keystore.encryption.algorithm";
-    public static final String KEYSTORE_TYPE_PROPERTY                 = "dell.cpsd.keystore.type";
-    public static final String ENCRYPTION_ENCODING_PROPERTY           = "dell.cpsd.keystore.encryption.encoding";
-    public static final String CERTIFICATE_VALIDITY_PROPERTY          = "dell.cpsd.keystore.certificate.validity";
-    public static final String CERTIFICATE_SNO_BIT_SIZE_PROPERTY      = "dell.cpsd.keystore.certificate.sn.bits.size";
-    public static final String CERTIFICATE_SIGNING_ALGORITHM_PROPERTY = "dell.cpsd.keystore.certificate.signing.algorithm";
-    public static final String KEYSTORE_OUTPUT_TYPE_PROPERTY          = "dell.cpsd.keystore.certificate.output.type";
+    private static final String ENCRYPTION_KEY_SIZE_PROPERTY           = "dell.cpsd.keystore.encryption.keysize";
+    private static final String ENCRYPTION_ALGORITHM_PROPERTY          = "dell.cpsd.keystore.encryption.algorithm";
+    private static final String KEYSTORE_TYPE_PROPERTY                 = "dell.cpsd.keystore.type";
+    private static final String ENCRYPTION_ENCODING_PROPERTY           = "dell.cpsd.keystore.encryption.encoding";
+    private static final String CERTIFICATE_VALIDITY_PROPERTY          = "dell.cpsd.keystore.certificate.validity";
+    private static final String CERTIFICATE_SNO_BIT_SIZE_PROPERTY      = "dell.cpsd.keystore.certificate.sn.bits.size";
+    private static final String CERTIFICATE_SIGNING_ALGORITHM_PROPERTY = "dell.cpsd.keystore.certificate.signing.algorithm";
+    private static final String KEYSTORE_OUTPUT_TYPE_PROPERTY          = "dell.cpsd.keystore.certificate.output.type";
+    private static final String HASHING_ITERATIONS_COUNT_PROPERTY      = "dell.cpsd.keystore.hashing.iterations.count";
+    private static final String PBE_ENCRYPTION_ALGORITHM_PROPERTY      = "dell.cpsd.keystore.pbe.encryption.algorithm";
+    private static final String SALT_GENERATOR_BYTE_LENGTH_PROPERTY    = "dell.cpsd.keystore.salt.generator.bytes.length";
 
     @Test
     public void test_Property_EncryptionAlgorithm() throws Exception
@@ -90,5 +96,26 @@ public class EncryptionPropertiesTest
     public void test_Property_KeyStore_Output_Type() throws Exception
     {
         Assert.assertEquals(EncryptionPropertiesConfig.loadProperties().getProperty(KEYSTORE_OUTPUT_TYPE_PROPERTY), KEYSTORE_OUTPUT_TYPE);
+    }
+
+    @Test
+    public void test_Property_hashing_iterations_count() throws Exception
+    {
+        Assert.assertEquals(EncryptionPropertiesConfig.loadProperties().getProperty(HASHING_ITERATIONS_COUNT_PROPERTY),
+                HASHING_ITERATIONS_COUNT);
+    }
+
+    @Test
+    public void test_Property_pbe_encryption_algorithm() throws Exception
+    {
+        Assert.assertEquals(EncryptionPropertiesConfig.loadProperties().getProperty(PBE_ENCRYPTION_ALGORITHM_PROPERTY),
+                PBE_ENCRYPTION_ALGORITHM);
+    }
+
+    @Test
+    public void test_Property_salt_generator_byte_length() throws Exception
+    {
+        Assert.assertEquals(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(SALT_GENERATOR_BYTE_LENGTH_PROPERTY)),
+                SALT_GENERATOR_BYTE_LENGTH);
     }
 }

@@ -80,13 +80,22 @@ public final class KeyStoreUtility
      * which is essential for the integrity of the key store. It is
      * essential that any service creating the key store must store
      * the password securely as it is required to access the key store.
+     * <p>
+     * <p>
+     * <i>
+     * Before calling this method, the calling service must check
+     * if the key store already exists or not. This can be easily
+     * checked by using {@link KeyStoreUtility#isKeyStoreExists(String)}
+     * method which takes the file path as its parameter.
+     * </i>
+     * </p>
      *
      * @param serviceName      Requesting Service Name
      * @param keyStorePath     Path to the Key store (/opt/dell/rcm-fitness/services/<service-name>/conf/keystore/
      * @param keyStorePassword Password to unlock the key store
      * @param keyAlias         Alias used while storing the key, key is again retrieved using this alias
      * @param keyPassword      Password used to retrieve the key
-     * @return
+     * @return KeyStore instance
      * @throws SignatureException       SignatureException
      * @throws NoSuchProviderException  NoSuchProviderException
      * @throws InvalidKeyException      InvalidKeyException
@@ -136,18 +145,22 @@ public final class KeyStoreUtility
     }
 
     /**
-     * TODO JAVA DOCS
+     * this method sets the private key entry, and certificate chain
+     * entry. It is must that the keystore must be loaded first before
+     * this method can be called.
      *
-     * @param keyPassword
-     * @param keyAlias
-     * @param keyStore
-     * @throws NoSuchAlgorithmException
-     * @throws IOException
-     * @throws CertificateException
-     * @throws SignatureException
-     * @throws NoSuchProviderException
-     * @throws InvalidKeyException
-     * @throws KeyStoreException
+     * @param keyPassword Private/Secret Key password
+     * @param keyAlias    Private/Secret key alias
+     * @param keyStore    Keystore loaded previously
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws IOException              IOException
+     * @throws CertificateException     CertificateException
+     * @throws SignatureException       SignatureException
+     * @throws NoSuchProviderException  NoSuchProviderException
+     * @throws InvalidKeyException      InvalidKeyException
+     * @throws KeyStoreException        KeyStoreException
+     * @see KeyStoreUtility#createServiceKeyStore(String, String, char[], String, char[])
+     * @see KeyStoreUtility#createCertificate(String, KeyPair)
      */
     private void updateKeyStore(final char[] keyPassword, final String keyAlias, final KeyStore keyStore)
             throws NoSuchAlgorithmException, IOException, CertificateException, SignatureException, NoSuchProviderException,
@@ -160,17 +173,22 @@ public final class KeyStoreUtility
     }
 
     /**
-     * TODO JAVA DOCS
+     * This method generates the X.509 certificate. The certificate
+     * info is set here, and the private key is used to sign the
+     * certificate. By default the certificate validity is set for
+     * 1 year from the issue date.
      *
-     * @param alias
-     * @param keyPair
-     * @return
-     * @throws IOException
-     * @throws CertificateException
-     * @throws NoSuchAlgorithmException
-     * @throws SignatureException
-     * @throws NoSuchProviderException
-     * @throws InvalidKeyException
+     * @param alias   certificate alias
+     * @param keyPair Key pair
+     * @return X.509 Certificate
+     * @throws IOException              IOException
+     * @throws CertificateException     CertificateException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws SignatureException       SignatureException
+     * @throws NoSuchProviderException  NoSuchProviderException
+     * @throws InvalidKeyException      InvalidKeyException
+     * @see KeyStoreUtility#updateKeyStore(char[], String, KeyStore)
+     * @see KeyStoreUtility#signCertificate(PrivateKey, X509CertInfo)
      */
     private X509Certificate createCertificate(final String alias, final KeyPair keyPair)
             throws IOException, CertificateException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException,
@@ -199,23 +217,23 @@ public final class KeyStoreUtility
         certificateInfo.set(X509CertInfo.VERSION, new CertificateVersion(CertificateVersion.V3));
         AlgorithmId algorithm = new AlgorithmId(AlgorithmId.md5WithRSAEncryption_oid);
         certificateInfo.set(X509CertInfo.ALGORITHM_ID, new CertificateAlgorithmId(algorithm));
-        X509CertImpl x509Cert = signCertificate(privateKey, certificateInfo);
-
-        return x509Cert;
+        return signCertificate(privateKey, certificateInfo);
     }
 
     /**
-     * TODO JAVA DOCS
+     * The method signs the X.509 certificate using the private key
+     * of the service. The signing algorithm used is <b>MD5WithRSA</b>.
      *
-     * @param privateKey
-     * @param certificateInfo
-     * @return
-     * @throws CertificateException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws NoSuchProviderException
-     * @throws SignatureException
-     * @throws IOException
+     * @param privateKey      Private key
+     * @param certificateInfo Certificate Info
+     * @return X509Certificate Implementation
+     * @throws CertificateException     CertificateException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws InvalidKeyException      InvalidKeyException
+     * @throws NoSuchProviderException  NoSuchProviderException
+     * @throws SignatureException       SignatureException
+     * @throws IOException              IOException
+     * @see KeyStoreUtility#createCertificate(String, KeyPair)
      */
     private X509CertImpl signCertificate(final PrivateKey privateKey, final X509CertInfo certificateInfo)
             throws CertificateException, NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, SignatureException,
@@ -227,31 +245,24 @@ public final class KeyStoreUtility
         return x509Cert;
     }
 
-    //TODO Complete the functionality
-    private KeyStore loadKeyStore(final String pathToKeyStore, final char[] keyStorePassword) throws FileNotFoundException
-    {
-        try (InputStream fileInputStream = new FileInputStream(pathToKeyStore))
-        {
-            KeyStore keyStore = KeyStore.getInstance(EncryptionPropertiesConfig.loadProperties().getProperty(KEYSTORE_TYPE_PROPERTY));
-            keyStore.load(fileInputStream, keyStorePassword);
-
-            return keyStore;
-        }
-        catch (FileNotFoundException exception)
-        {
-            throw new FileNotFoundException(exception.getMessage());
-        }
-        catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException exception)
-        {
-            //TODO Handle or throw the exception properly
-        }
-
-        return null;
-    }
-
-    //TODO Complete the functionality
+    /**
+     * This method is exposed to the other services and is used to get the
+     * keypair from the keystore. It requires keystore and key password to
+     * access the keystore first, and then with the help of the key alias,
+     * and the corresponding password the key can be accessed.
+     *
+     * @param pathToKeyStore   The path to keystore file
+     * @param keyStorePassword The password to access keystore
+     * @param keyPassword      The password to access key from the keystore
+     * @param keyAlias         The alias used to access private/secret key
+     * @return Key pair with private and public key, or secret key
+     * @throws IOException              IOException
+     * @throws KeyStoreException        KeyStoreException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws CertificateException     CertificateException
+     */
     public KeyPair getKeyPairFromKeyStore(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
-            final String keyAlias) throws FileNotFoundException
+            final String keyAlias) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException
     {
         try
         {
@@ -277,19 +288,73 @@ public final class KeyStoreUtility
         return null;
     }
 
-    //TODO Complete the functionality
+    /**
+     * This method loads the keystore and requires keystore location and
+     * the password to access the keystore. The method should not me called
+     * directly, as obtaining the keystore serves no purpose, the application
+     * only needs the private and public key pair.
+     *
+     * @param pathToKeyStore   This is the path to the keystore along with
+     *                         the keystore file name.
+     * @param keyStorePassword The password required to
+     * @return Keystore
+     * @throws IOException              IOException
+     * @throws KeyStoreException        KeyStoreException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws CertificateException     CertificateException
+     * @see KeyStoreUtility#getKeyPairFromKeyStore(String, char[], char[], String)
+     */
+    private KeyStore loadKeyStore(final String pathToKeyStore, final char[] keyStorePassword)
+            throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException
+    {
+        try (InputStream fileInputStream = new FileInputStream(pathToKeyStore))
+        {
+            KeyStore keyStore = KeyStore.getInstance(EncryptionPropertiesConfig.loadProperties().getProperty(KEYSTORE_TYPE_PROPERTY));
+            keyStore.load(fileInputStream, keyStorePassword);
+
+            return keyStore;
+        }
+        catch (FileNotFoundException exception)
+        {
+            throw new FileNotFoundException(exception.getMessage());
+        }
+        catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException exception)
+        {
+            //TODO Handle or throw the exception properly
+        }
+
+        return null;
+    }
+
+    /**
+     * This method provides the public key from the certificate that is
+     * loaded from the keystore. This method does exactly the same as
+     * {@link KeyStoreUtility#getKeyPairFromKeyStore(String, char[], char[], String)},
+     * only difference is this one method returns the keypair containing both
+     * private and public key and another method returns only the public key.
+     *
+     * @param pathToKeyStore   The path to keystore file
+     * @param keyStorePassword The password to access keystore
+     * @param keyPassword      The password to access key from the keystore
+     * @param keyAlias         The alias used to access private/secret key
+     * @return Public key
+     * @throws IOException              IOException
+     * @throws KeyStoreException        KeyStoreException
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws CertificateException     CertificateException
+     */
     public PublicKey getPublicKey(final String pathToKeyStore, final char[] keyStorePassword, final char[] keyPassword,
-            final String keyStoreAlias) throws FileNotFoundException
+            final String keyAlias) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException
     {
         try
         {
             KeyStore keyStore = loadKeyStore(pathToKeyStore, keyStorePassword);
 
-            Key key = generateKeyFromKeyStore(keyStore, keyStoreAlias, keyPassword);
+            Key key = generateKeyFromKeyStore(keyStore, keyAlias, keyPassword);
 
             if (key instanceof PrivateKey)
             {
-                Certificate certificate = keyStore.getCertificate(keyStoreAlias);
+                Certificate certificate = keyStore.getCertificate(keyAlias);
 
                 PublicKey publicKey = certificate.getPublicKey();
 
@@ -305,7 +370,14 @@ public final class KeyStoreUtility
         return null;
     }
 
-    //TODO GENERATE THE KEY FROM KEYSTORE
+    /**
+     * This method returns the key instance and mut be called internally.
+     *
+     * @param keyStore    Keystore
+     * @param keyAlias    Private/Secret key alias
+     * @param keyPassword Private/Secret key password
+     * @return Key instance
+     */
     private Key generateKeyFromKeyStore(final KeyStore keyStore, final String keyAlias, final char[] keyPassword)
     {
         try
@@ -314,8 +386,7 @@ public final class KeyStoreUtility
         }
         catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException exception)
         {
-            //TODO
-            // Don't handle the exceptions
+            //TODO Don't handle the exceptions
         }
         return null;
     }
