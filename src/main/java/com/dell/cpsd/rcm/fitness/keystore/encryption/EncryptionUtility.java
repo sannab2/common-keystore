@@ -13,6 +13,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -198,13 +199,15 @@ public final class EncryptionUtility
      * @throws BadPaddingException          BadPaddingException
      * @throws UnsupportedEncodingException UnsupportedEncodingException
      */
-    public static byte[] cipherText(final PublicKey publicKey, final String text, final String algorithm)
+    public static String cipherText(final PublicKey publicKey, final String text, final String algorithm)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException,
             IOException
     {
         final Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        return cipher.doFinal(text.getBytes(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_ENCODING_PROPERTY)));
+        byte[] cipherText = cipher.doFinal(text.getBytes(StandardCharsets.UTF_8));
+        byte[] encodedByte = Base64.getEncoder().encode(cipherText);
+        return new String(encodedByte, StandardCharsets.UTF_8);
     }
 
     /**
@@ -224,13 +227,13 @@ public final class EncryptionUtility
      * @throws BadPaddingException       BadPaddingException
      * @throws IOException               IOException
      */
-    public static String decipherText(final PrivateKey privateKey, final byte[] cipherText, final String algorithm)
+    public static String decipherText(final PrivateKey privateKey, final String cipherText, final String algorithm)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException,
             IOException
     {
         final Cipher cipher = Cipher.getInstance(algorithm);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        return new String(cipher.doFinal(cipherText),
-                EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_ENCODING_PROPERTY));
+        byte[] decodedByteText = Base64.getDecoder().decode(cipherText);
+        return new String(cipher.doFinal(decodedByteText));
     }
 }

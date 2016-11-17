@@ -13,6 +13,7 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 
 /**
  * This is the test class for EncryptionUtility class.
@@ -62,7 +63,7 @@ public class EncryptionUtilityTest
 
         String plainText = "unencryptedPassword";
 
-        String cipherText = new String(EncryptionUtility.cipherText(publicKey, plainText, EncryptionPropertiesTest.ENCRYPTION_ALGORITHM));
+        String cipherText = EncryptionUtility.cipherText(publicKey, plainText, EncryptionPropertiesTest.ENCRYPTION_ALGORITHM);
 
         Assert.assertNotEquals(plainText, cipherText);
         Assert.assertNotSame(cipherText, plainText);
@@ -75,7 +76,7 @@ public class EncryptionUtilityTest
 
         String plainText = "unencryptedPassword";
 
-        byte[] cipherText = EncryptionUtility.cipherText(keyPair.getPublic(), plainText, EncryptionPropertiesTest.ENCRYPTION_ALGORITHM);
+        String cipherText = EncryptionUtility.cipherText(keyPair.getPublic(), plainText, EncryptionPropertiesTest.ENCRYPTION_ALGORITHM);
 
         String decipherText = EncryptionUtility
                 .decipherText(keyPair.getPrivate(), cipherText, EncryptionPropertiesTest.ENCRYPTION_ALGORITHM);
