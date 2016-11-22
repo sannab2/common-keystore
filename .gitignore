@@ -11,3 +11,6 @@ nbactions.xml
 hs_err_pid*
 Thumbs.db
 .svn
+*.jar
+*.war
+*.ear
