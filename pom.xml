@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dell.cpsd.rcm.fitness.keystore</groupId>
     <artifactId>rcm-fitness-common-keystore</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>rcm-fitness-common-keystore</name>
     <description>This is the standard project for the rcm-fitness-common-keystore that can be used by multiple services to generate the key
         stores for storing certificate chains or keys.
@@ -22,7 +20,8 @@
 
     <scm>
         <connection>scm:git:${scm.git.repo.url}/VCE-Symphony/rcm-fitness-common-keystore.git</connection>
-    </scm>
+      <tag>rcm-fitness-common-keystore-1.0</tag>
+  </scm>
 
     <properties>
         <junit-version>4.12</junit-version>
