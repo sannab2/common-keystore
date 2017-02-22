@@ -20,3 +20,13 @@ For more information visit here: [Wiki](https://wiki.ent.vce.com/display/VSE/RCM
 
 The project is available on Git: [GIT_REPO](https://eos2git.cec.lab.emc.com/VCE-Symphony/rcm-fitness-common-keystore)
 
+## Documentation
+## API Reference
+## Prerequisites
+## Compilation: How to Compile
+## Packaging: How to Package
+## Automated Testing
+## How to Deploy and Run
+## How to Contribute
+## Community and Support
+## Licensing
