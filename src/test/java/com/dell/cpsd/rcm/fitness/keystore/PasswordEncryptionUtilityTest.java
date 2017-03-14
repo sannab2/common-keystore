@@ -6,19 +6,23 @@
 package com.dell.cpsd.rcm.fitness.keystore;
 
 import com.dell.cpsd.rcm.fitness.keystore.encryption.PasswordEncryptionUtility;
-import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import javax.crypto.BadPaddingException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * This is the unit test class for {@link PasswordEncryptionUtility}.
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
- * VCE Confidential/Proprietary Information
  * </p>
  *
- * @since Vision 1.0.0
+ * @version 1.1
+ * @since 1.0
  */
 public class PasswordEncryptionUtilityTest
 {
@@ -31,133 +35,128 @@ public class PasswordEncryptionUtilityTest
     }
 
     @Test
-    public void encrypted_password_not_null() throws Exception
+    public void secret_key_hex_not_null() throws Exception
     {
-        final String encryptedPassword_1 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
-        final String encryptedPassword_2 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
-
-        final String encryptedPassword_3 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
-        final String encryptedPassword_4 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
-
-        Assert.assertNotNull(encryptedPassword_1);
-        Assert.assertNotNull(encryptedPassword_2);
-        Assert.assertNotNull(encryptedPassword_3);
-        Assert.assertNotNull(encryptedPassword_4);
-    }
-
-    @Test(expected = EncryptionOperationNotPossibleException.class)
-    public void encrypted_decrypted_passwords_using_different_password_throws_exception() throws Exception
-    {
-        final String encryptedPassword_1 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal1".toCharArray(), "hal-orchestrator-keystore");
-
-        passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void encryption_without_supplying_pbe_password_throws_exception() throws Exception
-    {
-        passwordEncryptionUtility.encryptPassword("".toCharArray(), "hal-orchestrator-keystore");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void encryption_using_null_pbe_password_throws_exception() throws Exception
-    {
-        passwordEncryptionUtility.encryptPassword(null, "hal-orchestrator-keystore");
+        final String secretKeyHex = passwordEncryptionUtility.getSecretKeyHex();
+        assertNotNull(secretKeyHex);
     }
 
     @Test
-    public void encrypted_passwords_not_same_new_every_time() throws Exception
+    public void no_two_secret_keys_hex_are_same() throws Exception
     {
-        final String encryptedPassword_1 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
-        final String encryptedPassword_2 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
+        final String secretKeyHex_1 = passwordEncryptionUtility.getSecretKeyHex();
+        final String secretKeyHex_2 = passwordEncryptionUtility.getSecretKeyHex();
 
-        final String encryptedPassword_3 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
-        final String encryptedPassword_4 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
+        assertNotEquals(secretKeyHex_1, secretKeyHex_2);
+    }
 
-        Assert.assertNotEquals(encryptedPassword_1, encryptedPassword_2);
-        Assert.assertNotEquals(encryptedPassword_3, encryptedPassword_4);
+    @Test
+    public void encrypted_password_not_null() throws Exception
+    {
+        final String secretKeyHex = passwordEncryptionUtility.getSecretKeyHex();
+        final String plainTextPassword = "hello-world";
+
+        final String encryptedPassword = passwordEncryptionUtility.encryptText(plainTextPassword, secretKeyHex);
+
+        assertNotNull(encryptedPassword);
     }
 
     @Test
     public void decrypted_password_not_null() throws Exception
     {
-        final String encryptedPassword_1 = "6Z5VSgEfL04eYYMRJO5FwDi/Q+gDKkSdBsjpVC8KEMVrDj8tfTjdEg==";
-        final String encryptedPassword_2 = "2+10NCOy98jJ8O+VhFk984NaIV81/JK3qzMEeYgg+T1bGZFtCV8gJQ==";
+        final String secretKeyHex = passwordEncryptionUtility.getSecretKeyHex();
+        final String plainTextPassword = "hello-world";
 
-        final String encryptedPassword_3 = "2RyXs1iovD136g57qvFXr1Ceto6G7ySF9cQkR7IWGGk0iA1kWJ7xSw==";
-        final String encryptedPassword_4 = "wLaawHaug3ok2bSr71Ul3mYTpHur4Tb27DrSEp+XRUwnXq22T7YE3Q==";
+        final String encryptedPassword = passwordEncryptionUtility.encryptText(plainTextPassword, secretKeyHex);
 
-        final char[] decryptedPassword_1 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_1);
-        final char[] decryptedPassword_2 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_2);
+        final String decryptedPassword = passwordEncryptionUtility.decryptText(encryptedPassword, secretKeyHex);
 
-        final char[] decryptedPassword_3 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_3);
-        final char[] decryptedPassword_4 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_4);
+        assertNotNull(decryptedPassword);
+    }
 
-        Assert.assertNotNull(decryptedPassword_1);
-        Assert.assertNotNull(decryptedPassword_2);
-        Assert.assertNotNull(decryptedPassword_3);
-        Assert.assertNotNull(decryptedPassword_4);
+    @Test(expected = BadPaddingException.class)
+    public void decryption_with_different_secret_key_throws_exception() throws Exception
+    {
+        final String secretKeyHex = passwordEncryptionUtility.getSecretKeyHex();
+        final String plainTextPassword = "hello-world";
+
+        final String encryptedPassword = passwordEncryptionUtility.encryptText(plainTextPassword, secretKeyHex);
+
+        final String differentSecretKeyHex = passwordEncryptionUtility.getSecretKeyHex();
+
+        passwordEncryptionUtility.decryptText(encryptedPassword, differentSecretKeyHex);
     }
 
     @Test
-    public void plain_text_and_decrypted_password_are_same() throws Exception
+    public void plain_text_and_decrypted_text_are_same() throws Exception
     {
-        final String encryptedPassword_1 = "6Z5VSgEfL04eYYMRJO5FwDi/Q+gDKkSdBsjpVC8KEMVrDj8tfTjdEg==";
-        final String encryptedPassword_2 = "2+10NCOy98jJ8O+VhFk984NaIV81/JK3qzMEeYgg+T1bGZFtCV8gJQ==";
+        final String secretKeyHex = passwordEncryptionUtility.getSecretKeyHex();
+        final String plainTextPassword = "hello-world";
 
-        final String encryptedPassword_3 = "2RyXs1iovD136g57qvFXr1Ceto6G7ySF9cQkR7IWGGk0iA1kWJ7xSw==";
-        final String encryptedPassword_4 = "wLaawHaug3ok2bSr71Ul3mYTpHur4Tb27DrSEp+XRUwnXq22T7YE3Q==";
+        final String encryptedPassword = passwordEncryptionUtility.encryptText(plainTextPassword, secretKeyHex);
 
-        final char[] decryptedPassword_1 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_1);
-        final char[] decryptedPassword_2 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_2);
+        final String decryptedPassword = passwordEncryptionUtility.decryptText(encryptedPassword, secretKeyHex);
 
-        final char[] decryptedPassword_3 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_3);
-        final char[] decryptedPassword_4 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_4);
-
-        Assert.assertArrayEquals(decryptedPassword_1, decryptedPassword_2);
-        Assert.assertArrayEquals("hal-orchestrator-keystore".toCharArray(), decryptedPassword_1);
-        Assert.assertArrayEquals("hal-orchestrator-keystore".toCharArray(), decryptedPassword_2);
-
-        Assert.assertArrayEquals(decryptedPassword_3, decryptedPassword_4);
-        Assert.assertArrayEquals("hal-orchestrator-private-key".toCharArray(), decryptedPassword_3);
-        Assert.assertArrayEquals("hal-orchestrator-private-key".toCharArray(), decryptedPassword_4);
+        assertEquals(plainTextPassword, decryptedPassword);
     }
 
     @Test
-    public void decrypted_passwords_from_encrypted_passwords_same() throws Exception
+    public void example_for_hal_orchestrator() throws Exception
     {
-        final String encryptedPassword_1 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
-        final String encryptedPassword_2 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-keystore");
+        final String secretKeyHexForHal = passwordEncryptionUtility.getSecretKeyHex();
 
-        final String encryptedPassword_3 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
-        final String encryptedPassword_4 = passwordEncryptionUtility
-                .encryptPassword("symphony-hal".toCharArray(), "hal-orchestrator-private-key");
+        final String halOrchestratorKeyStorePassword = "hal-orchestrator-keystore";
+        final String halOrchestratorPrivateKeyPassword = "hal-orchestrator-private-key";
 
-        final char[] decryptedPassword_1 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_1);
-        final char[] decryptedPassword_2 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_2);
+        final String encryptedKeyStorePassword = passwordEncryptionUtility.encryptText(halOrchestratorKeyStorePassword, secretKeyHexForHal);
+        final String encryptedPrivateKeyPassword = passwordEncryptionUtility
+                .encryptText(halOrchestratorPrivateKeyPassword, secretKeyHexForHal);
 
-        final char[] decryptedPassword_3 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_3);
-        final char[] decryptedPassword_4 = passwordEncryptionUtility.decryptPassword("symphony-hal".toCharArray(), encryptedPassword_4);
+        final String decryptedKeyStorePassword = passwordEncryptionUtility.decryptText(encryptedKeyStorePassword, secretKeyHexForHal);
+        final String decryptedPrivateKeyPassword = passwordEncryptionUtility.decryptText(encryptedPrivateKeyPassword, secretKeyHexForHal);
 
-        Assert.assertArrayEquals(decryptedPassword_1, decryptedPassword_2);
-        Assert.assertArrayEquals("hal-orchestrator-keystore".toCharArray(), decryptedPassword_1);
-        Assert.assertArrayEquals("hal-orchestrator-keystore".toCharArray(), decryptedPassword_2);
+        assertEquals(halOrchestratorKeyStorePassword, decryptedKeyStorePassword);
+        assertEquals(halOrchestratorPrivateKeyPassword, decryptedPrivateKeyPassword);
 
-        Assert.assertArrayEquals(decryptedPassword_3, decryptedPassword_4);
-        Assert.assertArrayEquals("hal-orchestrator-private-key".toCharArray(), decryptedPassword_3);
-        Assert.assertArrayEquals("hal-orchestrator-private-key".toCharArray(), decryptedPassword_4);
+        System.out.println("Hal Orchestrator Key Store password: " + halOrchestratorKeyStorePassword);
+        System.out.println("Hal Orchestrator Private Key password: " + halOrchestratorPrivateKeyPassword);
+        System.out.println("Secret Key Hex For HAL <GOES IN PROPERTIES FILE>: " + secretKeyHexForHal);
+        System.out.println("Hal Orchestrator Keystore Encrypted Password <GOES IN PROPERTIES FILE>: " + encryptedKeyStorePassword);
+        System.out.println("Hal Orchestrator Private Key Encrypted Password <GOES IN PROPERTIES FILE>: " + encryptedPrivateKeyPassword);
+        System.out.println("Hal Orchestrator Keystore Decrypted Password: " + decryptedKeyStorePassword);
+        System.out.println("Hal Orchestrator Private Key Decrypted Password: " + decryptedPrivateKeyPassword);
+
+    }
+
+    @Test
+    public void example_for_credential_service() throws Exception
+    {
+        final String secretKeyHexForCredential = passwordEncryptionUtility.getSecretKeyHex();
+
+        final String credentialServiceKeyStorePassword = "credential-keystore";
+        final String credentialServicePrivateKeyPassword = "credential-private-key";
+
+        final String encryptedKeyStorePassword = passwordEncryptionUtility
+                .encryptText(credentialServiceKeyStorePassword, secretKeyHexForCredential);
+        final String encryptedPrivateKeyPassword = passwordEncryptionUtility
+                .encryptText(credentialServicePrivateKeyPassword, secretKeyHexForCredential);
+
+        final String decryptedKeyStorePassword = passwordEncryptionUtility
+                .decryptText(encryptedKeyStorePassword, secretKeyHexForCredential);
+        final String decryptedPrivateKeyPassword = passwordEncryptionUtility
+                .decryptText(encryptedPrivateKeyPassword, secretKeyHexForCredential);
+
+        assertEquals(credentialServiceKeyStorePassword, decryptedKeyStorePassword);
+        assertEquals(credentialServicePrivateKeyPassword, decryptedPrivateKeyPassword);
+
+        System.out.println("Credential Service Key Store password: " + credentialServiceKeyStorePassword);
+        System.out.println("Credential Service Private Key password: " + credentialServicePrivateKeyPassword);
+        System.out.println("Secret Key Hex For Credential <GOES IN PROPERTIES FILE>: " + secretKeyHexForCredential);
+        System.out.println("Credential Service Keystore Encrypted Password <GOES IN PROPERTIES FILE>: " + encryptedKeyStorePassword);
+        System.out.println("Credential Service Private Key Encrypted Password <GOES IN PROPERTIES FILE>: " + encryptedPrivateKeyPassword);
+        System.out.println("Credential Service Keystore Decrypted Password: " + decryptedKeyStorePassword);
+        System.out.println("Credential Service Private Key Decrypted Password: " + decryptedPrivateKeyPassword);
+
     }
 }
 

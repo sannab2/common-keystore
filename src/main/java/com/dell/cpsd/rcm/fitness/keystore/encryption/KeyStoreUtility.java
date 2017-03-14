@@ -403,11 +403,7 @@ public final class KeyStoreUtility
     public boolean isKeyStoreExists(final String pathToKeyStore)
     {
         File keyStoreFile = new File(pathToKeyStore);
-        if (keyStoreFile.exists())
-        {
-            return true;
-        }
-        return false;
+        return keyStoreFile.exists();
     }
 
 }

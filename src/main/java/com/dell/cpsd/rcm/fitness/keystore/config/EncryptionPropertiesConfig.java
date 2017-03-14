@@ -16,7 +16,6 @@ import java.util.Properties;
  * <p/>
  *
  * @version 1.0
- * @since SINCE-TBD
  */
 public class EncryptionPropertiesConfig
 {
@@ -32,8 +31,8 @@ public class EncryptionPropertiesConfig
     //TODO ADD JAVA DOCS
     public static Properties loadProperties() throws IOException
     {
-        Properties properties = new Properties();
-        InputStream in = EncryptionPropertiesConfig.class.getClassLoader().getResourceAsStream("encryption.properties");
+        final Properties properties = new Properties();
+        final InputStream in = EncryptionPropertiesConfig.class.getClassLoader().getResourceAsStream("encryption.properties");
         properties.load(in);
         return properties;
     }

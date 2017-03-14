@@ -13,7 +13,6 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Base64;
 
 /**
  * This is the test class for EncryptionUtility class.
@@ -83,6 +82,4 @@ public class EncryptionUtilityTest
 
         Assert.assertEquals(decipherText, plainText);
     }
-
-    //TODO ADD MORE UNIT TEST CASES
 }

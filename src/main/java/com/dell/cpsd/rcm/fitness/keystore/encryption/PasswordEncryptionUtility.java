@@ -6,12 +6,20 @@
 package com.dell.cpsd.rcm.fitness.keystore.encryption;
 
 import com.dell.cpsd.rcm.fitness.keystore.config.EncryptionPropertiesConfig;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.jasypt.encryption.pbe.config.SimplePBEConfig;
-import org.jasypt.salt.RandomSaltGenerator;
-import org.jasypt.salt.SaltGenerator;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Properties;
 
 /**
@@ -29,117 +37,105 @@ import java.util.Properties;
  * <p>
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
- * VCE Confidential/Proprietary Information
  * </p>
  *
- * @since Vision 1.0.0
+ * @version 1.1
+ * @since 1.0
  */
 public class PasswordEncryptionUtility
 {
-    private Properties properties;
+    private static Properties properties;
+
+    static
+    {
+        try
+        {
+            properties = EncryptionPropertiesConfig.loadProperties();
+        }
+        catch (IOException exception)
+        {
+
+        }
+    }
+
+    private static String bytesToHex(byte[] hash)
+    {
+        return DatatypeConverter.printHexBinary(hash);
+    }
 
     /**
-     * This method will decrypt the previously encrypted password. It takes the
-     * configuration password that was used to encrypt the password previously,
-     * and the encrypted password itself.
+     * This method gives the secret key Hex which is used
+     * to encrypt and decrypt the passwords or texts.
      * <p>
      * <b>
-     * Note: The service calling this method must be responsible for removing
-     * the decrypted password from the memory.
+     * Note: The same secret key is used to encrypt and decrypt
+     * the text, otherwise and exception will be thrown.
+     * So, the secret key that was used to encrypt the password
+     * must be used to decrypt the password, and the secret key
+     * hex must be stored in the properties file.
      * </b>
      * </p>
      *
-     * @param pbePassword       The password that is stored for the encryptor configuration.
-     *                          This is the same password that was used when the plain text
-     *                          password was encrypted.
-     * @param encryptedPassword This is the encrypted password in the configuration file
-     * @return decrypted password as character array
-     * @throws IOException IO Exception
+     * @return Secret Key Hex - Store it in properties file.
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
      */
-    public char[] decryptPassword(final char[] pbePassword, final String encryptedPassword) throws IOException
+    public String getSecretKeyHex() throws NoSuchAlgorithmException
     {
-        StandardPBEStringEncryptor standardPBEStringEncryptor = getStandardPBEStringEncryptor(pbePassword);
-
-        return standardPBEStringEncryptor.decrypt(encryptedPassword).toCharArray();
+        return DatatypeConverter.printHexBinary(getSecretEncryptionKey().getEncoded());
     }
 
     /**
-     * This method is just for the demonstration purpose, it encrypts the
-     * plain text password using the configuration password that it
-     * receives. This method should not be used the production environment,
-     * as it receives the password in {@link String} format. For encrypting
-     * the passwords, the command line utility can be used, or it can simply
-     * be used to generate the encrypted passwords for the configuration file.
-     * <p>
-     * <b>
-     * Note: This method encrypts the password based on the algorithm,
-     * hashing iterations, salt etc and will generate a different encrypted
-     * password each time. It doesn't matter if it produces different
-     * encrypted passwords using the same plain text password and configuration
-     * password. As long as the configuration password is same, the encrypted
-     * password can be decrypted.
-     * </b>
-     * </p>
+     * This method returns the secret key.
      *
-     * @param pbePassword       The password that is stored for the encryptor
-     *                          configuration. This password must be used to
-     *                          decrypt the encrypted password later on.
-     * @param plainTextPassword Plain text password to be encrypted.
-     * @return Encrypted Password
-     * @throws IOException IO Exception
+     * @return Secret Key
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
      */
-    public String encryptPassword(final char[] pbePassword, final String plainTextPassword) throws IOException
+    private SecretKey getSecretEncryptionKey() throws NoSuchAlgorithmException
     {
-        StandardPBEStringEncryptor standardPBEStringEncryptor = getStandardPBEStringEncryptor(pbePassword);
-
-        return standardPBEStringEncryptor.encrypt(plainTextPassword);
+        final KeyGenerator generator = KeyGenerator.getInstance(properties.getProperty("dell.cpsd.keystore.password.encryption.algorithm"));
+        generator.init(Integer.parseInt(properties.getProperty("dell.cpsd.keystore.password.encryption.keysize")));
+        return generator.generateKey();
     }
 
     /**
-     * The method generates the {@link StandardPBEStringEncryptor} instance.
-     * This method is called internally.
+     * This method returns the encrypted password that goes
+     * in the properties file.
      *
-     * @param pbePassword The password that is stored for the encryptor
-     *                    configuration. This password must be used to
-     *                    decrypt the encrypted password later on.
-     * @return StandardPBEStringEncryptor instance
-     * @throws IOException IO Exception
-     * @see PasswordEncryptionUtility#encryptPassword(char[], String)
-     * @see PasswordEncryptionUtility#decryptPassword(char[], String)
-     * @see PasswordEncryptionUtility#getSimplePBEConfig()
+     * @param plainText    Password to be encrypted
+     * @param secretKeyHex Secret Key Hex
+     * @return Encrypted text that goes in properties file
      */
-    private StandardPBEStringEncryptor getStandardPBEStringEncryptor(final char[] pbePassword) throws IOException
+    public String encryptText(final String plainText, final String secretKeyHex)
+            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
     {
-        StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
-
-        SimplePBEConfig config = getSimplePBEConfig();
-
-        standardPBEStringEncryptor.setConfig(config);
-
-        standardPBEStringEncryptor.setPasswordCharArray(pbePassword);
-        return standardPBEStringEncryptor;
+        final Cipher cipher = Cipher.getInstance(properties.getProperty("dell.cpsd.keystore.password.encryption.algorithm"));
+        final SecretKey secretKey = new SecretKeySpec(DatatypeConverter.parseHexBinary(secretKeyHex),
+                properties.getProperty("dell.cpsd.keystore.password.encryption.algorithm"));
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] cipherText = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+        byte[] encodedByte = Base64.getEncoder().encode(cipherText);
+        return new String(encodedByte, StandardCharsets.UTF_8);
     }
 
     /**
-     * This method returns the configuration instance, where the
-     * number of hashing iterations, encryption algorithm, salt key
-     * length is specified.
-     * This method is called internally.
+     * This method is called when the passwords need to be decrypted
+     * before use.
      *
-     * @return SimplePBEConfig instance
-     * @throws IOException IO Exception
-     * @see PasswordEncryptionUtility#getStandardPBEStringEncryptor(char[])
+     * @param cipherText   Encrypted password that is in the properties file
+     * @param secretKeyHex The secret key hex that is in the properties file
+     * @return Decrypted password
      */
-    private SimplePBEConfig getSimplePBEConfig() throws IOException
+    public String decryptText(final String cipherText, final String secretKeyHex)
+            throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
     {
-        properties = EncryptionPropertiesConfig.loadProperties();
-        SimplePBEConfig config = new SimplePBEConfig();
-        config.setKeyObtentionIterations(properties.getProperty("dell.cpsd.keystore.hashing.iterations.count"));
-        config.setAlgorithm(properties.getProperty("dell.cpsd.keystore.pbe.encryption.algorithm"));
-        SaltGenerator saltGenerator = new RandomSaltGenerator();
-        saltGenerator.generateSalt(Integer.parseInt(properties.getProperty("dell.cpsd.keystore.salt.generator.bytes.length")));
-        config.setSaltGenerator(saltGenerator);
-        return config;
+        final Cipher cipher = Cipher.getInstance(properties.getProperty("dell.cpsd.keystore.password.encryption.algorithm"));
+        final SecretKey secretKey = new SecretKeySpec(DatatypeConverter.parseHexBinary(secretKeyHex),
+                properties.getProperty("dell.cpsd.keystore.password.encryption.algorithm"));
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        byte[] decodedByteText = Base64.getDecoder().decode(cipherText);
+        byte[] bytePlainText = cipher.doFinal(decodedByteText);
+        return new String(bytePlainText);
     }
+
 }
 

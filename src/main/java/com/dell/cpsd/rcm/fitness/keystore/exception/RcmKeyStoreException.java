@@ -6,14 +6,12 @@
 package com.dell.cpsd.rcm.fitness.keystore.exception;
 
 /**
- * TODO: Document usage.
- * <p>
+ * RCM Keystore exception
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
- * VCE Confidential/Proprietary Information
  * </p>
  *
- * @since Vision 1.0.0
+ * @since 1.0
  */
 public class RcmKeyStoreException extends Exception
 {
