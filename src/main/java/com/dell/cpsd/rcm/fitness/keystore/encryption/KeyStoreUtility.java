@@ -194,20 +194,20 @@ public final class KeyStoreUtility
             throws IOException, CertificateException, NoSuchAlgorithmException, SignatureException, NoSuchProviderException,
             InvalidKeyException
     {
-        PrivateKey privateKey = keyPair.getPrivate();
-        X509CertInfo certificateInfo = new X509CertInfo();
+        final PrivateKey privateKey = keyPair.getPrivate();
+        final X509CertInfo certificateInfo = new X509CertInfo();
 
-        Date fromDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        Date toDate = Date.from(LocalDateTime.now()
+        final Date fromDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        final Date toDate = Date.from(LocalDateTime.now()
                 .plusYears(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_VALIDITY_PROPERTY)))
                 .atZone(ZoneId.systemDefault()).toInstant());
 
-        CertificateValidity certificateValidity = new CertificateValidity(fromDate, toDate);
-        BigInteger serialNumber = new BigInteger(
+        final CertificateValidity certificateValidity = new CertificateValidity(fromDate, toDate);
+        final BigInteger serialNumber = new BigInteger(
                 Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_SNO_BIT_SIZE_PROPERTY)),
                 new SecureRandom());
-        X500Name issuerName = new X500Name("C=" + alias);
-        X500Name subject = new X500Name("C=" + alias);
+        final X500Name issuerName = new X500Name("C=" + alias);
+        final X500Name subject = new X500Name("C=" + alias);
 
         certificateInfo.set(X509CertInfo.VALIDITY, certificateValidity);
         certificateInfo.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber(serialNumber));
@@ -215,7 +215,7 @@ public final class KeyStoreUtility
         certificateInfo.set(X509CertInfo.ISSUER, issuerName);
         certificateInfo.set(X509CertInfo.KEY, new CertificateX509Key(keyPair.getPublic()));
         certificateInfo.set(X509CertInfo.VERSION, new CertificateVersion(CertificateVersion.V3));
-        AlgorithmId algorithm = new AlgorithmId(AlgorithmId.md5WithRSAEncryption_oid);
+        final AlgorithmId algorithm = new AlgorithmId(AlgorithmId.sha256WithRSAEncryption_oid);
         certificateInfo.set(X509CertInfo.ALGORITHM_ID, new CertificateAlgorithmId(algorithm));
         return signCertificate(privateKey, certificateInfo);
     }
@@ -240,7 +240,7 @@ public final class KeyStoreUtility
             IOException
     {
         // Sign the certificate
-        X509CertImpl x509Cert = new X509CertImpl(certificateInfo);
+        final X509CertImpl x509Cert = new X509CertImpl(certificateInfo);
         x509Cert.sign(privateKey, EncryptionPropertiesConfig.loadProperties().getProperty(CERTIFICATE_SIGNING_ALGORITHM_PROPERTY));
         return x509Cert;
     }
@@ -266,23 +266,22 @@ public final class KeyStoreUtility
     {
         try
         {
-            KeyStore keyStore = loadKeyStore(pathToKeyStore, keyStorePassword);
+            final KeyStore keyStore = loadKeyStore(pathToKeyStore, keyStorePassword);
 
-            Key key = generateKeyFromKeyStore(keyStore, keyAlias, keyPassword);
+            final Key key = generateKeyFromKeyStore(keyStore, keyAlias, keyPassword);
 
             if (key instanceof PrivateKey)
             {
-                Certificate certificate = keyStore.getCertificate(keyAlias);
+                final Certificate certificate = keyStore.getCertificate(keyAlias);
 
-                PublicKey publicKey = certificate.getPublicKey();
+                final PublicKey publicKey = certificate.getPublicKey();
 
                 return new KeyPair(publicKey, (PrivateKey) key);
             }
         }
         catch (KeyStoreException exception)
         {
-            //TODO Handle or throw the exception properly
-            // Don't handle the exceptions
+            throw new KeyStoreException("Error in getting a key pair from the keystore");
         }
 
         return null;
@@ -309,7 +308,7 @@ public final class KeyStoreUtility
     {
         try (InputStream fileInputStream = new FileInputStream(pathToKeyStore))
         {
-            KeyStore keyStore = KeyStore.getInstance(EncryptionPropertiesConfig.loadProperties().getProperty(KEYSTORE_TYPE_PROPERTY));
+            final KeyStore keyStore = KeyStore.getInstance(EncryptionPropertiesConfig.loadProperties().getProperty(KEYSTORE_TYPE_PROPERTY));
             keyStore.load(fileInputStream, keyStorePassword);
 
             return keyStore;
@@ -320,10 +319,8 @@ public final class KeyStoreUtility
         }
         catch (IOException | KeyStoreException | NoSuchAlgorithmException | CertificateException exception)
         {
-            //TODO Handle or throw the exception properly
+            throw new KeyStoreException(exception.getMessage());
         }
-
-        return null;
     }
 
     /**
@@ -348,23 +345,19 @@ public final class KeyStoreUtility
     {
         try
         {
-            KeyStore keyStore = loadKeyStore(pathToKeyStore, keyStorePassword);
+            final KeyStore keyStore = loadKeyStore(pathToKeyStore, keyStorePassword);
 
-            Key key = generateKeyFromKeyStore(keyStore, keyAlias, keyPassword);
+            final Key key = generateKeyFromKeyStore(keyStore, keyAlias, keyPassword);
 
             if (key instanceof PrivateKey)
             {
-                Certificate certificate = keyStore.getCertificate(keyAlias);
-
-                PublicKey publicKey = certificate.getPublicKey();
-
-                return publicKey;
+                final Certificate certificate = keyStore.getCertificate(keyAlias);
+                return certificate.getPublicKey();
             }
         }
         catch (KeyStoreException exception)
         {
-            //TODO Handle or throw the exception properly
-            // Don't handle the exceptions
+            throw new KeyStoreException("Error in obtaining the public key from the key store");
         }
 
         return null;
@@ -378,7 +371,7 @@ public final class KeyStoreUtility
      * @param keyPassword Private/Secret key password
      * @return Key instance
      */
-    private Key generateKeyFromKeyStore(final KeyStore keyStore, final String keyAlias, final char[] keyPassword)
+    private Key generateKeyFromKeyStore(final KeyStore keyStore, final String keyAlias, final char[] keyPassword) throws KeyStoreException
     {
         try
         {
@@ -386,9 +379,8 @@ public final class KeyStoreUtility
         }
         catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException exception)
         {
-            //TODO Don't handle the exceptions
+            throw new KeyStoreException("Error in generating the key from the keystore.");
         }
-        return null;
     }
 
     /**
@@ -402,7 +394,7 @@ public final class KeyStoreUtility
      */
     public boolean isKeyStoreExists(final String pathToKeyStore)
     {
-        File keyStoreFile = new File(pathToKeyStore);
+        final File keyStoreFile = new File(pathToKeyStore);
         return keyStoreFile.exists();
     }
 

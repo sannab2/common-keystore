@@ -10,14 +10,13 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * TODO: Document usage.
+ * RCM Keystore exception code.
  * <p>
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
- * VCE Confidential/Proprietary Information
  * </p>
  *
- * @since Vision 1.0.0
+ * @since 1.0
  */
 public enum RcmKeyStoreExceptionCode
 {

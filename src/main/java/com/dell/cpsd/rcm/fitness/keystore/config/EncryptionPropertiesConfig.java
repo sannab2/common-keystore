@@ -28,7 +28,12 @@ public class EncryptionPropertiesConfig
         // Added just to hide the class instantiation
     }
 
-    //TODO ADD JAVA DOCS
+    /**
+     * This method loads the properties file.
+     *
+     * @return Properties instance containing a set of properties.
+     * @throws IOException IOException
+     */
     public static Properties loadProperties() throws IOException
     {
         final Properties properties = new Properties();

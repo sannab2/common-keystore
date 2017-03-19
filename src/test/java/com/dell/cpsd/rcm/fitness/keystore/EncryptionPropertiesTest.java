@@ -28,10 +28,11 @@ public class EncryptionPropertiesTest
     private static final String ENCODING_TYPE                      = "UTF-8";
     private static final int    CERTIFICATE_VALIDITY               = 1;
     private static final int    CERTIFICATE_SNO_BIT_SIZE           = 128;
-    private static final String CERTIFICATE_SIGNING_ALGORITHM      = "MD5WithRSA";
+    private static final String CERTIFICATE_SIGNING_ALGORITHM      = "SHA256withRSA";
     private static final String KEYSTORE_OUTPUT_TYPE               = ".p12";
     private static final String PASSWORD_ENCRYPTION_ALGORITHM_TYPE = "AES";
     private static final int    PASSWORD_ENCRYPTION_KEYSIZE_TYPE   = 128;
+    private static final String SECURE_RANDOM_CONSTANT             = "SHA1PRNG";
 
     private static final String ENCRYPTION_KEY_SIZE_PROPERTY           = "dell.cpsd.keystore.encryption.keysize";
     private static final String ENCRYPTION_ALGORITHM_PROPERTY          = "dell.cpsd.keystore.encryption.algorithm";
@@ -43,6 +44,7 @@ public class EncryptionPropertiesTest
     private static final String KEYSTORE_OUTPUT_TYPE_PROPERTY          = "dell.cpsd.keystore.certificate.output.type";
     private static final String PASSWORD_ENCRYPTION_ALGORITHM          = "dell.cpsd.keystore.password.encryption.algorithm";
     private static final String PASSWORD_ENCRYPTION_KEYSIZE            = "dell.cpsd.keystore.password.encryption.keysize";
+    private static final String SECURE_RANDOM_CONSTANT_PROPERTY        = "dell.cpsd.keystore.secure.random.constant";
 
     @Test
     public void test_Property_EncryptionAlgorithm() throws Exception
@@ -108,6 +110,13 @@ public class EncryptionPropertiesTest
     {
         Assert.assertEquals(PASSWORD_ENCRYPTION_KEYSIZE_TYPE,
                 Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(PASSWORD_ENCRYPTION_KEYSIZE)));
+    }
+
+    @Test
+    public void test_property_secure_random_constant() throws Exception
+    {
+        Assert.assertEquals(SECURE_RANDOM_CONSTANT,
+                EncryptionPropertiesConfig.loadProperties().getProperty(SECURE_RANDOM_CONSTANT_PROPERTY));
     }
 
 }

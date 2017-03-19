@@ -21,6 +21,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is the Password Based Encryption Utility class. The
@@ -45,6 +47,7 @@ import java.util.Properties;
 public class PasswordEncryptionUtility
 {
     private static Properties properties;
+    private static final Logger logger = Logger.getLogger("PasswordEncryptionUtility");
 
     static
     {
@@ -54,8 +57,9 @@ public class PasswordEncryptionUtility
         }
         catch (IOException exception)
         {
-
+            logger.log(Level.SEVERE, exception.getMessage());
         }
+        logger.log(Level.INFO, "Properties Loaded");
     }
 
     private static String bytesToHex(byte[] hash)
