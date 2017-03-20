@@ -8,14 +8,13 @@ package com.dell.cpsd.rcm.fitness.keystore.i18n;
 import java.util.ListResourceBundle;
 
 /**
- * TODO: Document usage.
- * <p>
+ * RCM Keystore error bundle
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
- * VCE Confidential/Proprietary Information
  * </p>
  *
- * @since Vision 1.0.0
+ * @version 1.0
+ * @since 1.0
  */
 public class RcmKeyStoreErrorBundle extends ListResourceBundle
 {

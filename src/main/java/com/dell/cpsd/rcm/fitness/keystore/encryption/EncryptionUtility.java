@@ -42,8 +42,7 @@ import java.util.Base64;
 public final class EncryptionUtility
 {
     private static final String ENCRYPTION_KEY_SIZE_PROPERTY = "dell.cpsd.keystore.encryption.keysize";
-    //private static final String ENCRYPTION_ALGORITHM_PROPERTY = "dell.cpsd.keystore.encryption.algorithm";
-    private static final String ENCRYPTION_ENCODING_PROPERTY = "dell.cpsd.keystore.encryption.encoding";
+    private static final String SECURE_RANDOM_CONSTANT       = "dell.cpsd.keystore.secure.random.constant";
 
     /**
      * Default Constructor - Scope is Private
@@ -72,8 +71,7 @@ public final class EncryptionUtility
     {
         final KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
         keyPairGenerator.initialize(Integer.parseInt(EncryptionPropertiesConfig.loadProperties().getProperty(ENCRYPTION_KEY_SIZE_PROPERTY)),
-                SecureRandom.getInstance("SHA1PRNG"));
-        //TODO SECURE RANDOM CONSTANT
+                SecureRandom.getInstance(EncryptionPropertiesConfig.loadProperties().getProperty(SECURE_RANDOM_CONSTANT)));
         return keyPairGenerator;
     }
 

@@ -16,7 +16,6 @@ import java.util.Properties;
  * <p/>
  *
  * @version 1.0
- * @since SINCE-TBD
  */
 public class EncryptionPropertiesConfig
 {
@@ -29,11 +28,16 @@ public class EncryptionPropertiesConfig
         // Added just to hide the class instantiation
     }
 
-    //TODO ADD JAVA DOCS
+    /**
+     * This method loads the properties file.
+     *
+     * @return Properties instance containing a set of properties.
+     * @throws IOException IOException
+     */
     public static Properties loadProperties() throws IOException
     {
-        Properties properties = new Properties();
-        InputStream in = EncryptionPropertiesConfig.class.getClassLoader().getResourceAsStream("encryption.properties");
+        final Properties properties = new Properties();
+        final InputStream in = EncryptionPropertiesConfig.class.getClassLoader().getResourceAsStream("encryption.properties");
         properties.load(in);
         return properties;
     }
