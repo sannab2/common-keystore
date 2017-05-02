@@ -3,21 +3,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>com.dell.cpsd</groupId>
+        <artifactId>root-parent</artifactId>
+        <version>0.2.3</version>
+    </parent>
+
     <groupId>com.dell.cpsd.rcm.fitness.keystore</groupId>
     <artifactId>rcm-fitness-common-keystore</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
+    <packaging>jar</packaging>
     <name>rcm-fitness-common-keystore</name>
     <description>This is the standard project for the rcm-fitness-common-keystore that can be used by multiple services to generate the key
         stores for storing certificate chains or keys.
     </description>
-
-    <parent>
-        <groupId>com.dell.cpsd</groupId>
-        <artifactId>root-parent</artifactId>
-        <version>0.2</version>
-    </parent>
-
-    <packaging>jar</packaging>
 
     <scm>
         <connection>scm:git:${scm.git.repo.url}/VCE-Symphony/rcm-fitness-common-keystore.git</connection>
