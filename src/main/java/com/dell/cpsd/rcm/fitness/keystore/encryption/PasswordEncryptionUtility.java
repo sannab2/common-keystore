@@ -44,6 +44,7 @@ import java.util.logging.Logger;
  * @version 1.1
  * @since 1.0
  */
+@Deprecated
 public class PasswordEncryptionUtility
 {
     private static Properties properties;
@@ -109,6 +110,7 @@ public class PasswordEncryptionUtility
      * @param secretKeyHex Secret Key Hex
      * @return Encrypted text that goes in properties file
      */
+    @Deprecated
     public String encryptText(final String plainText, final String secretKeyHex)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
     {
@@ -129,6 +131,7 @@ public class PasswordEncryptionUtility
      * @param secretKeyHex The secret key hex that is in the properties file
      * @return Decrypted password
      */
+    @Deprecated
     public String decryptText(final String cipherText, final String secretKeyHex)
             throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException
     {

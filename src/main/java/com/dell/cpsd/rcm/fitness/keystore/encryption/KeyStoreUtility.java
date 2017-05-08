@@ -58,6 +58,7 @@ import static com.dell.cpsd.rcm.fitness.keystore.i18n.RcmKeyStoreExceptionCode.E
  * @version 1.0
  * @since SINCE -TBD
  */
+@Deprecated
 public final class KeyStoreUtility
 {
     private static final String KEYSTORE_TYPE_PROPERTY                 = "dell.cpsd.keystore.type";
