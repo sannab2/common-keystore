@@ -1,8 +1,9 @@
 package com.dell.cpsd.rcm.fitness.keystore;
 
-import com.dell.cpsd.rcm.fitness.keystore.config.EncryptionConfig;
-import com.dell.cpsd.rcm.fitness.keystore.encryption.AsymmetricCipherManager;
-import com.dell.cpsd.rcm.fitness.keystore.encryption.SymmetricCipherManager;
+import com.dell.cpsd.rcm.fitness.encryption.CipherManager;
+import com.dell.cpsd.rcm.fitness.encryption.config.EncryptionConfig;
+import com.dell.cpsd.rcm.fitness.encryption.AsymmetricCipherManager;
+import com.dell.cpsd.rcm.fitness.encryption.SymmetricCipherManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * Test cases for the asymmetric {@link com.dell.cpsd.rcm.fitness.keystore.encryption.CipherManager}.
+ * Test cases for the asymmetric {@link CipherManager}.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EncryptionConfig.class})

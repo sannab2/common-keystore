@@ -1,8 +1,9 @@
-package com.dell.cpsd.rcm.fitness.keystore.config;
+package com.dell.cpsd.rcm.fitness.encryption.config;
 
-import com.dell.cpsd.rcm.fitness.keystore.encryption.AsymmetricCipherManager;
-import com.dell.cpsd.rcm.fitness.keystore.exception.CipherManagerException;
-import com.dell.cpsd.rcm.fitness.keystore.encryption.SymmetricCipherManager;
+import com.dell.cpsd.rcm.fitness.encryption.AsymmetricCipherManager;
+import com.dell.cpsd.rcm.fitness.encryption.CipherManager;
+import com.dell.cpsd.rcm.fitness.encryption.exception.CipherManagerException;
+import com.dell.cpsd.rcm.fitness.encryption.SymmetricCipherManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -11,7 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * A Spring configuration class that can be used directly to auto wire
- * the encryption {@link com.dell.cpsd.rcm.fitness.keystore.encryption.CipherManager} implementations
+ * the encryption {@link CipherManager} implementations
  * into an service or PAQX.
  */
 @Configuration

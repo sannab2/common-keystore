@@ -1,4 +1,4 @@
-package com.dell.cpsd.rcm.fitness.keystore.encryption;
+package com.dell.cpsd.rcm.fitness.encryption;
 
 import java.security.SecureRandom;
 import java.util.Arrays;

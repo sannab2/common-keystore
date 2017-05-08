@@ -1,6 +1,6 @@
-package com.dell.cpsd.rcm.fitness.keystore.encryption;
+package com.dell.cpsd.rcm.fitness.encryption;
 
-import com.dell.cpsd.rcm.fitness.keystore.exception.CipherManagerException;
+import com.dell.cpsd.rcm.fitness.encryption.exception.CipherManagerException;
 
 /**
  * {@link CipherManager} defines methods to encrypt and decrypt data
