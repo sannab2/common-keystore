@@ -39,6 +39,7 @@ import java.util.Base64;
  * @version 1.0
  * @since SINCE -TBD
  */
+@Deprecated
 public final class EncryptionUtility
 {
     private static final String ENCRYPTION_KEY_SIZE_PROPERTY = "dell.cpsd.keystore.encryption.keysize";
