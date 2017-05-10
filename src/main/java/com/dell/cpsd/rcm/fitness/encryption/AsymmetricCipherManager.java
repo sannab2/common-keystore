@@ -160,6 +160,12 @@ public class AsymmetricCipherManager extends AbstractCipherManager
         }
     }
 
+
+    public String getPublicKeyEncodedBase64()
+    {
+       return  new String(Base64.getEncoder().encode(getPublicKeyEncoded()));
+    }
+
     /**
      * Generate a new 2048-bit asymmetric key pair
      * Protect the private key by encrypting it with a symmetric key
