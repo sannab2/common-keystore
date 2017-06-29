@@ -1,7 +1,7 @@
 ## rcm-fitness-common-keystore
 
 ## Description
-Use this repository to generate the keystores for storing certificate chains and private keys.This repository also provides the utility class for encrypting plain text information (using the public key of services) and decrypting it (using its private key).
+Use this repository to generate the keystores for storing certificate chains and private keys. This repository also provides the utility class for encrypting (using the public key) and decrypting (using the private key) plain text information.
 
 Each Service needs to have its own keystore to hold both public and private keys. The project utilizes the PKCS12 keystore which is the default key store in Java 9. 
 
