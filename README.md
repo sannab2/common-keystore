@@ -1,9 +1,9 @@
 ## rcm-fitness-common-keystore
 
 ## Description
-Use this repository to generate the keystores for storing certificate chains and private keys. This repository also provides the utility class for encrypting (using the public key) and decrypting (using the private key) plain text information.
+Use this repository to generate keystores for storing certificate chains and private keys. This repository also provides the utility class for encrypting (using the public key) and decrypting (using the private key) plain text information.
 
-Each Service needs to have its own keystore to hold both public and private keys. The project utilizes the PKCS12 keystore which is the default key store in Java 9. 
+Each service must have a keystore to hold both public and private keys. The project utilizes the PKCS12 keystore which is the default keystore in Java 9. 
 
 ## Documentation
 You can find additional documentation for Project Symphony at [dellemc-symphony.readthedocs.io][documentation].
