@@ -1,6 +1,6 @@
 /**
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries. All Rights Reserved.
- * VCE Confidential/Proprietary Information
+ * Dell EMC Confidential/Proprietary Information
  */
 
 package com.dell.cpsd.rcm.fitness.keystore.config;
@@ -13,6 +13,7 @@ import java.util.Properties;
  * This is the properties config file for this project
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries. All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
  * <p/>
  *
  * @version 1.0

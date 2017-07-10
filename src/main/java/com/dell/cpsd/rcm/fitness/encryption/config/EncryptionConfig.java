@@ -1,3 +1,8 @@
+/**
+ * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
+ */
+
 package com.dell.cpsd.rcm.fitness.encryption.config;
 
 import com.dell.cpsd.rcm.fitness.encryption.AsymmetricCipherManager;
@@ -14,6 +19,13 @@ import org.springframework.scheduling.annotation.Scheduled;
  * A Spring configuration class that can be used directly to auto wire
  * the encryption {@link CipherManager} implementations
  * into an service or PAQX.
+ * <p>
+ * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
+ * </p>
+ *
+ * @version 1.0
+ * @since 1.0
  */
 @Configuration
 @EnableAsync

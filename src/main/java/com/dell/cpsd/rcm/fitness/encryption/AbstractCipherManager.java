@@ -1,3 +1,8 @@
+/**
+ * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
+ */
+
 package com.dell.cpsd.rcm.fitness.encryption;
 
 import java.security.SecureRandom;
@@ -5,6 +10,13 @@ import java.util.Arrays;
 
 /**
  * Common methods used by @{@link CipherManager} implementations.
+ * <p>
+ * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
+ * </p>
+ *
+ * @version 1.0
+ * @since 1.0
  */
 public abstract class AbstractCipherManager implements CipherManager
 {

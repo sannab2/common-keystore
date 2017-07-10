@@ -1,6 +1,6 @@
 /**
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
- * VCE Confidential/Proprietary Information
+ * Dell EMC Confidential/Proprietary Information
  */
 
 package com.dell.cpsd.rcm.fitness.keystore;
@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNotNull;
  * This is the unit test class for {@link PasswordEncryptionUtility}.
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
  * </p>
  *
  * @version 1.1

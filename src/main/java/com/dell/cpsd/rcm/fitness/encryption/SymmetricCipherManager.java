@@ -1,3 +1,7 @@
+/**
+ * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
+ */
 package com.dell.cpsd.rcm.fitness.encryption;
 
 import com.dell.cpsd.rcm.fitness.encryption.exception.CipherManagerException;
@@ -17,6 +21,13 @@ import java.security.NoSuchAlgorithmException;
  * used for both encryption and decryption.
  * <p>
  * TODO Allow overriding the default key size and salt-length to a larger value. Must be set system wide.
+ * <p>
+ * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
+ * </p>
+ *
+ * @version 1.0
+ * @since 1.0
  */
 public class SymmetricCipherManager extends AbstractCipherManager
 {

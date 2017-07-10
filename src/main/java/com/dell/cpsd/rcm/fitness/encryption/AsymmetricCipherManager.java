@@ -1,3 +1,8 @@
+/**
+ * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
+ */
+
 package com.dell.cpsd.rcm.fitness.encryption;
 
 import com.dell.cpsd.rcm.fitness.encryption.exception.CipherManagerException;
@@ -30,6 +35,13 @@ import java.util.Base64;
  * TODO Every ~5 minutes, generate a new symmetric key and asymmetric key pair
  * <p>
  * TODO Allow overriding the default key size to a larger value. Must be set system wide.
+ * <p>
+ * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
+ * Dell EMC Confidential/Proprietary Information
+ * </p>
+ *
+ * @version 1.0
+ * @since 1.0
  */
 public class AsymmetricCipherManager extends AbstractCipherManager
 {

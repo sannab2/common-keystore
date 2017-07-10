@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--Copyright &copy; 2017 Dell Inc. or its subsidiaries. All Rights Reserved.-->
+<!--Dell EMC Confidential/Proprietary Information-->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -8,6 +10,13 @@
         <artifactId>root-parent</artifactId>
         <version>0.2.5</version>
     </parent>
+
+    <licenses>
+        <license>
+            <name>Eclipse Public License - v 1.0</name>
+            <url>http://www.eclipse.org/legal/epl-v10.html</url>
+        </license>
+    </licenses>
 
     <groupId>com.dell.cpsd.rcm.fitness.keystore</groupId>
     <artifactId>rcm-fitness-common-keystore</artifactId>
@@ -94,6 +103,12 @@
                 <directory>${project.basedir}/../</directory>
                 <includes>
                     <include>Binaries-License.md</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>LICENSE.md</include>
                 </includes>
             </resource>
         </resources>
