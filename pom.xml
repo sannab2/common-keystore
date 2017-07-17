@@ -8,7 +8,7 @@
     <parent>
         <groupId>com.dell.cpsd</groupId>
         <artifactId>root-parent</artifactId>
-        <version>0.2.5</version>
+        <version>1.0.0</version>
     </parent>
 
     <licenses>
@@ -67,7 +67,9 @@
     </description>
 
     <scm>
-        <connection>scm:git:${scm.git.repo.url}/VCE-Symphony/rcm-fitness-common-keystore.git</connection>
+        <connection>scm:git:https://github.com/dellemc-symphony/rcm-fitness-common-keystore.git</connection>
+        <developerConnection>scm:git:https://github.com/dellemc-symphony/rcm-fitness-common-keystore</developerConnection>
+        <url>https://github.com/dellemc-symphony/rcm-fitness-common-keystore/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -75,8 +77,8 @@
         <junit-version>4.12</junit-version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
-        <spring.framework.version>4.3.4.RELEASE</spring.framework.version>
+        <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
+        <spring.framework.version>4.3.8.RELEASE</spring.framework.version>
     </properties>
 
     <dependencies>
