@@ -55,6 +55,12 @@
             <organization>com.dell.cpsd</organization>
             <organizationUrl>https://github.com/rousef42</organizationUrl>
         </developer>
+        <developer>
+            <name>Joseph O'Leary</name>
+            <email>joseph.oleary@dell.com</email>
+            <organization>com.dell.cpsd</organization>
+            <organizationUrl>https://github.com/joz73</organizationUrl>
+        </developer>
     </developers>
 
     <groupId>com.dell.cpsd.rcm.fitness.keystore</groupId>
