@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/dellemc-symphony/rcm-fitness-common-keystore.svg?branch=master)](https://travis-ci.org/dellemc-symphony/rcm-fitness-common-keystore)
 [![Slack](http://community.codedellemc.com/badge.svg)](https://codecommunity.slack.com/messages/symphony)
 [![Codecov](https://img.shields.io/codecov/c/github/dellemc-symphony/rcm-fitness-common-keystore.svg)](https://codecov.io/gh/dellemc-symphony/rcm-fitness-common-keystore)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.dell.cpsd/rcm-fitness-common-keystore/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.dell.cpsd.common.messaging/common-messaging-parent)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.dell.cpsd/rcm-fitness-common-keystore/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.dell.cpsd/rcm-fitness-common-keystore)
 [![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
 
 ## rcm-fitness-common-keystore
