@@ -18,7 +18,6 @@ import java.security.KeyStoreException;
 /**
  * This is the keystore utility test class.
  * <p>
- * <p>
  * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
  * Dell EMC Confidential/Proprietary Information
  * </p>
