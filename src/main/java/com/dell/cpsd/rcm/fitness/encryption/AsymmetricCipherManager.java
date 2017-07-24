@@ -60,8 +60,8 @@ public class AsymmetricCipherManager extends AbstractCipherManager
      * Construct a new cipher manager with just the encoded public key. Convert the encoded
      * public key back to an RSA-based {@link PublicKey}. Ensure the private key is left as null.
      *
-     * @param publicKeyEncoded
-     * @throws CipherManagerException
+     * @param publicKeyEncoded A public key in an encoded format
+     * @throws CipherManagerException CipherManagerException
      */
     public AsymmetricCipherManager(byte[] publicKeyEncoded) throws CipherManagerException
     {
@@ -81,6 +81,8 @@ public class AsymmetricCipherManager extends AbstractCipherManager
     /**
      * Generate a random symmetric key (AES 128-bit).
      * Generate a random asymmetric key pair (RSA 2048-bit)
+     *
+     * @throws CipherManagerException CipherManagerException
      */
     public void initialize() throws CipherManagerException
     {
@@ -100,9 +102,9 @@ public class AsymmetricCipherManager extends AbstractCipherManager
     /**
      * Encrypt the clearText using the RSA publicKey.
      *
-     * @param clearText
+     * @param clearText Byte array to be encrypted
      * @return A portable, encrypted, Base64-encoded byte array
-     * @throws CipherManagerException
+     * @throws CipherManagerException CipherManagerException
      */
     @Override
     public byte[] encrypt(final byte[] clearText) throws CipherManagerException
@@ -131,7 +133,8 @@ public class AsymmetricCipherManager extends AbstractCipherManager
      * to a PrivateKey (RSA) and decrypt the cipherText.
      *
      * @param cipherText A portable, encrypted, Base64-encoded byte array
-     * @return
+     * @return Decrypted byte array
+     * @throws CipherManagerException CipherManagerException
      */
     @Override
     public byte[] decrypt(final byte[] cipherText) throws CipherManagerException
@@ -162,7 +165,7 @@ public class AsymmetricCipherManager extends AbstractCipherManager
     /**
      * Return the public key in an encoded format.
      *
-     * @return
+     * @return A public key in an encoded format
      */
     public byte[] getPublicKeyEncoded()
     {

@@ -68,6 +68,7 @@ public final class EncryptionUtility
      * @param algorithm Encryption Algorithm
      * @return keyPairGenerator
      * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws IOException IOException
      */
     public static KeyPairGenerator obtainKeyPairGenerator(final String algorithm) throws NoSuchAlgorithmException, IOException
     {
@@ -104,6 +105,7 @@ public final class EncryptionUtility
      * @param algorithm Encryption Algorithm
      * @return KeyPair
      * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws IOException IOException
      * @see EncryptionUtility#obtainKeyPair(KeyPairGenerator)
      */
     public static KeyPair obtainKeyPair(final String algorithm) throws NoSuchAlgorithmException, IOException
@@ -137,6 +139,7 @@ public final class EncryptionUtility
      * @param algorithm Encryption Algorithm
      * @return PublicKey
      * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws IOException IOException
      * @see EncryptionUtility#obtainPublicKey(KeyPairGenerator)
      */
     public static PublicKey obtainPublicKey(final String algorithm) throws NoSuchAlgorithmException, IOException

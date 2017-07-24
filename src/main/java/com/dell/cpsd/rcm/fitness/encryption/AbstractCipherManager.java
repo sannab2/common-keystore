@@ -27,7 +27,7 @@ public abstract class AbstractCipherManager implements CipherManager
     /**
      * Overwrite a byte array with all zeros
      *
-     * @param array
+     * @param array Byte Array
      */
     public void clear(byte[] array)
     {

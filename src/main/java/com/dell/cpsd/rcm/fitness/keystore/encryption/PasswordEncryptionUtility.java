@@ -109,6 +109,11 @@ public class PasswordEncryptionUtility
      * @param plainText    Password to be encrypted
      * @param secretKeyHex Secret Key Hex
      * @return Encrypted text that goes in properties file
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws NoSuchPaddingException NoSuchPaddingException
+     * @throws InvalidKeyException InvalidKeyException
+     * @throws IllegalBlockSizeException IllegalBlockSizeException
+     * @throws BadPaddingException BadPaddingException
      */
     @Deprecated
     public String encryptText(final String plainText, final String secretKeyHex)
@@ -129,6 +134,11 @@ public class PasswordEncryptionUtility
      *
      * @param cipherText   Encrypted password that is in the properties file
      * @param secretKeyHex The secret key hex that is in the properties file
+     * @throws NoSuchAlgorithmException NoSuchAlgorithmException
+     * @throws NoSuchPaddingException NoSuchPaddingException
+     * @throws InvalidKeyException InvalidKeyException
+     * @throws IllegalBlockSizeException IllegalBlockSizeException
+     * @throws BadPaddingException BadPaddingException
      * @return Decrypted password
      */
     @Deprecated

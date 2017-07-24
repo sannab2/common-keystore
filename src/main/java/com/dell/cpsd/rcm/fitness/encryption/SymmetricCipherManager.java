@@ -56,8 +56,8 @@ public class SymmetricCipherManager extends AbstractCipherManager
      * Encrypt the privateKeyBytes array using the current symmetric key. Append a random salt
      * to the key material before encrypting.
      *
-     * @param clearText
-     * @return
+     * @param clearText Byte array to be encrypted
+     * @return A portable, encrypted, Base64-encoded byte array
      */
     @Override
     public byte[] encrypt(final byte[] clearText) throws CipherManagerException
@@ -87,8 +87,9 @@ public class SymmetricCipherManager extends AbstractCipherManager
      * NOTE: The caller is responsible to clear the resulting clearText. They can use the clear method
      * on the {@link SymmetricCipherManager}.
      *
-     * @param cipherText
-     * @return
+     * @param cipherText A portable, encrypted, Base64-encoded byte array
+     * @return Decrypted byte array
+     * @throws CipherManagerException CipherManagerException
      */
     @Override
     public byte[] decrypt(final byte[] cipherText) throws CipherManagerException
@@ -115,7 +116,7 @@ public class SymmetricCipherManager extends AbstractCipherManager
      * Initialize the cipher suite that is used for both encryption and decryption.
      *
      * @param mode Cipher.ENCRYPT_MODE | Cipher.DECRYPT_MODE
-     * @return
+     * @return Cipher suite used for both encryption and decryption
      */
     private Cipher initializeCipher(int mode) throws CipherManagerException
     {
@@ -149,8 +150,8 @@ public class SymmetricCipherManager extends AbstractCipherManager
     /**
      * Generate a random salt to be used during symmetric encryption
      *
-     * @param saltLength
-     * @return
+     * @param saltLength  Length of Random salt
+     * @return Random salt used during symmetric encryption
      */
     private byte[] generateSalt(final int saltLength)
     {
