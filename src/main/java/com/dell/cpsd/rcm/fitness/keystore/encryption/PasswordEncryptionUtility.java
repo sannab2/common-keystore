@@ -37,7 +37,6 @@ import java.util.logging.Logger;
  * </i>
  * </p>
  * <p>
- * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries.  All Rights Reserved.
  * Dell EMC Confidential/Proprietary Information
  * </p>

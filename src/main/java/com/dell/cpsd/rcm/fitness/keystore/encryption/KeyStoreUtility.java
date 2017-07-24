@@ -92,7 +92,7 @@ public final class KeyStoreUtility
      * </p>
      *
      * @param serviceName      Requesting Service Name
-     * @param keyStorePath     Path to the Key store (/opt/dell/rcm-fitness/services/<service-name>/conf/keystore/
+     * @param keyStorePath     Path to the Key store (/opt/dell/rcm-fitness/services/{service-name}/conf/keystore/
      * @param keyStorePassword Password to unlock the key store
      * @param keyAlias         Alias used while storing the key, key is again retrieved using this alias
      * @param keyPassword      Password used to retrieve the key
