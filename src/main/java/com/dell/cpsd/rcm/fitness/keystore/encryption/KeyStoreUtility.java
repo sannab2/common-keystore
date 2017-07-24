@@ -54,7 +54,7 @@ import static com.dell.cpsd.rcm.fitness.keystore.i18n.RcmKeyStoreExceptionCode.E
  * <p>
  * Copyright &copy; 2016 Dell Inc. or its subsidiaries. All Rights Reserved.
  * Dell EMC Confidential/Proprietary Information
- * <p/>
+ * </p>
  *
  * @version 1.0
  * @since SINCE -TBD
@@ -82,7 +82,6 @@ public final class KeyStoreUtility
      * which is essential for the integrity of the key store. It is
      * essential that any service creating the key store must store
      * the password securely as it is required to access the key store.
-     * <p>
      * <p>
      * <i>
      * Before calling this method, the calling service must check
