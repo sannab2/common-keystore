@@ -34,7 +34,7 @@ pipeline {
 	}
         stage('Compile') {
             steps {
-                sh "mvn clean install -Dmaven.repo.local=.repo -DskipTests=true -DskipITs=true -s ~/.m2/settings-default.xml"
+                sh "mvn clean install -Dmaven.repo.local=.repo -DskipTests=true -DskipITs=true"
             }
         }
         stage('Unit Testing') {
@@ -52,17 +52,12 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME ==~ /stable.*/) {
                         withCredentials([string(credentialsId: 'GPG-Dell-Key', variable: 'GPG_PASSPHRASE')]) {
-                            sh "mvn deploy -Dmaven.repo.local=.repo -DskipTests=true -DskipITs=true -Ppublish-release -Dgpg.passphrase=${GPG_PASSPHRASE} -Dgpg.keyname=73BD7C5F -DskipJavadoc=false -DskipJavasource=false -s ~/.m2/settings-default.xml"
+                            sh "mvn deploy -Dmaven.repo.local=.repo -DskipTests=true -DskipITs=true -Ppublish-release -Dgpg.passphrase=${GPG_PASSPHRASE} -Dgpg.keyname=73BD7C5F -DskipJavadoc=false -DskipJavasource=false"
                         }
                     } else {
-                        sh "mvn deploy -Dmaven.repo.local=.repo -DskipTests=true -DskipITs=true -s ~/.m2/settings-default.xml"
+                        sh "mvn deploy -Dmaven.repo.local=.repo -DskipTests=true -DskipITs=true"
                     }
                 }
-            }
-        }
-        stage('Deploy to Internal Snapshot Repo') {
-            steps {
-                    sh "mvn deploy -Dmaven.repo.local=.repo -DskipTests=true -DskipITs=true -DaltDeploymentRepository=vce.snapshot::default::http://repo.vmo.lab:8080/artifactory/libs-snapshot-local"
             }
         }
         stage('SonarQube Analysis') {
