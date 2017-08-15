@@ -3,17 +3,18 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.encryption.config;
+package com.dell.cpsd.common.keystore.encryption.config;
 
-import com.dell.cpsd.rcm.fitness.encryption.AsymmetricCipherManager;
-import com.dell.cpsd.rcm.fitness.encryption.CipherManager;
-import com.dell.cpsd.rcm.fitness.encryption.exception.CipherManagerException;
-import com.dell.cpsd.rcm.fitness.encryption.SymmetricCipherManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import com.dell.cpsd.common.keystore.encryption.AsymmetricCipherManager;
+import com.dell.cpsd.common.keystore.encryption.CipherManager;
+import com.dell.cpsd.common.keystore.encryption.SymmetricCipherManager;
+import com.dell.cpsd.common.keystore.encryption.exception.CipherManagerException;
 
 /**
  * A Spring configuration class that can be used directly to auto wire

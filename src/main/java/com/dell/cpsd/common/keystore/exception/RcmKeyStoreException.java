@@ -3,7 +3,7 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.keystore.exception;
+package com.dell.cpsd.common.keystore.exception;
 
 /**
  * RCM Keystore exception

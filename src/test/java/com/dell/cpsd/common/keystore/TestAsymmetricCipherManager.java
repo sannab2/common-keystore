@@ -3,18 +3,19 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.keystore;
+package com.dell.cpsd.common.keystore;
 
-import com.dell.cpsd.rcm.fitness.encryption.CipherManager;
-import com.dell.cpsd.rcm.fitness.encryption.config.EncryptionConfig;
-import com.dell.cpsd.rcm.fitness.encryption.AsymmetricCipherManager;
-import com.dell.cpsd.rcm.fitness.encryption.SymmetricCipherManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.dell.cpsd.common.keystore.encryption.AsymmetricCipherManager;
+import com.dell.cpsd.common.keystore.encryption.CipherManager;
+import com.dell.cpsd.common.keystore.encryption.SymmetricCipherManager;
+import com.dell.cpsd.common.keystore.encryption.config.EncryptionConfig;
 
 /**
  * Test cases for the asymmetric {@link CipherManager}.

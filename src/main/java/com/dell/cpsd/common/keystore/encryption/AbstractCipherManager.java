@@ -3,7 +3,7 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.encryption;
+package com.dell.cpsd.common.keystore.encryption;
 
 import java.security.SecureRandom;
 import java.util.Arrays;

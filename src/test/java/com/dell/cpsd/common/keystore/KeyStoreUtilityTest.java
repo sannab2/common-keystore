@@ -3,12 +3,13 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.keystore;
+package com.dell.cpsd.common.keystore;
 
-import com.dell.cpsd.rcm.fitness.keystore.encryption.KeyStoreUtility;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.dell.cpsd.common.keystore.encryption.KeyStoreUtility;
 
 import java.io.FileNotFoundException;
 import java.security.KeyPair;

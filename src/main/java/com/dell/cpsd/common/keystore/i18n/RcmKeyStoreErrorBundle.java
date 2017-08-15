@@ -3,7 +3,7 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.keystore.i18n;
+package com.dell.cpsd.common.keystore.i18n;
 
 import java.util.ListResourceBundle;
 

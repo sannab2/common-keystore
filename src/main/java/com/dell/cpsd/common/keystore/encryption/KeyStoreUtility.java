@@ -3,9 +3,8 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.keystore.encryption;
+package com.dell.cpsd.common.keystore.encryption;
 
-import com.dell.cpsd.rcm.fitness.keystore.config.EncryptionPropertiesConfig;
 import sun.security.x509.AlgorithmId;
 import sun.security.x509.CertificateAlgorithmId;
 import sun.security.x509.CertificateSerialNumber;
@@ -15,6 +14,8 @@ import sun.security.x509.CertificateX509Key;
 import sun.security.x509.X500Name;
 import sun.security.x509.X509CertImpl;
 import sun.security.x509.X509CertInfo;
+
+import static com.dell.cpsd.common.keystore.i18n.RcmKeyStoreExceptionCode.ERROR1_E;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +43,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-import static com.dell.cpsd.rcm.fitness.keystore.i18n.RcmKeyStoreExceptionCode.ERROR1_E;
+import com.dell.cpsd.common.keystore.config.EncryptionPropertiesConfig;
 
 /**
  * This class provides various key store utility methods that can be

@@ -11,16 +11,16 @@
         <version>1.0.0</version>
     </parent>
 
-    <groupId>com.dell.cpsd.rcm.fitness.keystore</groupId>
-    <artifactId>rcm-fitness-common-keystore</artifactId>
+    <groupId>com.dell.cpsd.common.keystore</groupId>
+    <artifactId>common-keystore</artifactId>
     <version>1.5.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>rcm-fitness-common-keystore</name>
-    <description>This is the standard project for the rcm-fitness-common-keystore that can be used by multiple services
+    <name>common-keystore</name>
+    <description>This is the standard project for the common-keystore that can be used by multiple services
         to generate the key stores for storing certificate chains or keys.
     </description>
-    <url>https://github.com/dellemc-symphony/rcm-fitness-common-keystore</url>
+    <url>https://github.com/dellemc-symphony/common-keystore</url>
 
     <licenses>
         <license>
@@ -82,10 +82,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/dellemc-symphony/rcm-fitness-common-keystore.git</connection>
-        <developerConnection>scm:git:https://github.com/dellemc-symphony/rcm-fitness-common-keystore
+        <connection>scm:git:https://github.com/dellemc-symphony/common-keystore.git</connection>
+        <developerConnection>scm:git:https://github.com/dellemc-symphony/common-keystore
         </developerConnection>
-        <url>https://github.com/dellemc-symphony/rcm-fitness-common-keystore/tree/master</url>
+	<url>https://github.com/dellemc-symphony/common-keystore/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 

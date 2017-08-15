@@ -3,9 +3,9 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.encryption;
+package com.dell.cpsd.common.keystore.encryption;
 
-import com.dell.cpsd.rcm.fitness.encryption.exception.CipherManagerException;
+import com.dell.cpsd.common.keystore.encryption.exception.CipherManagerException;
 
 /**
  * {@link CipherManager} defines methods to encrypt and decrypt data

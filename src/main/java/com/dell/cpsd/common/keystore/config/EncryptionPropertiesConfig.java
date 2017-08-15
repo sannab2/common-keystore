@@ -3,7 +3,7 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.keystore.config;
+package com.dell.cpsd.common.keystore.config;
 
 import java.io.IOException;
 import java.io.InputStream;

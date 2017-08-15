@@ -3,11 +3,12 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.keystore;
+package com.dell.cpsd.common.keystore;
 
-import com.dell.cpsd.rcm.fitness.keystore.config.EncryptionPropertiesConfig;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.dell.cpsd.common.keystore.config.EncryptionPropertiesConfig;
 
 /**
  * This is the test class for Encryption Properties.

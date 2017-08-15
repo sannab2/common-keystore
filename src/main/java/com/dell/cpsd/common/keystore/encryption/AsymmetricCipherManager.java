@@ -3,14 +3,15 @@
  * Dell EMC Confidential/Proprietary Information
  */
 
-package com.dell.cpsd.rcm.fitness.encryption;
-
-import com.dell.cpsd.rcm.fitness.encryption.exception.CipherManagerException;
+package com.dell.cpsd.common.keystore.encryption;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import com.dell.cpsd.common.keystore.encryption.exception.CipherManagerException;
+
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;

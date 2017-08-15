@@ -2,9 +2,7 @@
  * Copyright &copy; 2017 Dell Inc. or its subsidiaries.  All Rights Reserved.
  * Dell EMC Confidential/Proprietary Information
  */
-package com.dell.cpsd.rcm.fitness.encryption;
-
-import com.dell.cpsd.rcm.fitness.encryption.exception.CipherManagerException;
+package com.dell.cpsd.common.keystore.encryption;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -12,6 +10,9 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import com.dell.cpsd.common.keystore.encryption.exception.CipherManagerException;
+
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
